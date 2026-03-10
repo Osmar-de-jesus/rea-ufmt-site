@@ -990,7 +990,7 @@
         <div class="live-banner">
           📊 <strong>Resultados em tempo real:</strong>
           <p style="margin:6px 0 0 0;">
-            Este dashboard mostra apenas as respostas atuais enviadas pelos estudantes através do formulário da pesquisa.
+            Este dashboard mostra apenas as respostas atuais enviadas pelos estudantes através do formulário da pesquisa, sem exibir dados pessoais.
           </p>
         </div>
 
@@ -1022,7 +1022,7 @@
 
         <p class="status-line" id="dashboardStatus">Aguardando leitura da base de dados.</p>
         <div class="note-box">
-          <strong>Banco de dados conectado:</strong> este site está configurado para ler o CSV publicado da planilha de respostas.
+          <strong>Banco de dados conectado:</strong> este site está configurado para ler o CSV publicado da planilha de respostas e apresentar apenas dados agregados.
         </div>
       </div>
     </section>
@@ -1296,14 +1296,31 @@
 
     function normalizeData(rawRows) {
       return rawRows.map(row => {
-        const values = Object.values(row);
+        const entries = Object.entries(row);
+
+        const sanitizedEntries = entries.filter(([key]) => {
+          const k = key.toLowerCase();
+          return !(
+            k.includes('e-mail') ||
+            k.includes('email') ||
+            k.includes('nome') ||
+            k.includes('name') ||
+            k.includes('endereço de e-mail') ||
+            k.includes('endereco de e-mail') ||
+            k.includes('carimbo de data/hora') ||
+            k.includes('timestamp') ||
+            k.includes('data/hora')
+          );
+        });
+
+        const values = sanitizedEntries.map(([, value]) => value);
 
         return {
-          modalidade: row['Modalidade'] || row['modalidade'] || values[1] || '',
-          eit: row['Conhece o EIT?'] || row['EIT'] || row['eit'] || values[2] || '',
-          preparo: Number((row['Preparo'] || row['preparo'] || values[3] || '').toString().replace(',', '.')) || 0,
-          empreender: Number((row['Intenção de empreender'] || row['empreender'] || values[4] || '').toString().replace(',', '.')) || 0,
-          barreira: row['Principal barreira'] || row['barreira'] || values[5] || ''
+          modalidade: row['Modalidade'] || row['modalidade'] || values[0] || '',
+          eit: row['Conhece o EIT?'] || row['EIT'] || row['eit'] || values[1] || '',
+          preparo: Number((row['Preparo'] || row['preparo'] || values[2] || '').toString().replace(',', '.')) || 0,
+          empreender: Number((row['Intenção de empreender'] || row['empreender'] || values[3] || '').toString().replace(',', '.')) || 0,
+          barreira: row['Principal barreira'] || row['barreira'] || values[4] || ''
         };
       }).filter(item => item.modalidade || item.eit || item.barreira);
     }
@@ -1390,7 +1407,14 @@
         },
         options: {
           responsive: true,
-          plugins: { legend: { position: 'bottom' } }
+          plugins: {
+            legend: { position: 'bottom' },
+            tooltip: {
+              callbacks: {
+                label: (context) => `${context.label}: ${context.raw}`
+              }
+            }
+          }
         }
       });
 
@@ -1405,7 +1429,14 @@
         },
         options: {
           responsive: true,
-          plugins: { legend: { display: false } },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (context) => `Respostas: ${context.raw}`
+              }
+            }
+          },
           scales: { y: { beginAtZero: true } }
         }
       });
@@ -1422,7 +1453,14 @@
         options: {
           indexAxis: 'y',
           responsive: true,
-          plugins: { legend: { display: false } },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (context) => `Respostas: ${context.raw}`
+              }
+            }
+          },
           scales: { x: { beginAtZero: true } }
         }
       });
@@ -1438,7 +1476,14 @@
         },
         options: {
           responsive: true,
-          plugins: { legend: { display: false } },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (context) => `Média: ${context.raw}`
+              }
+            }
+          },
           scales: { y: { beginAtZero: true, max: 10 } }
         }
       });
