@@ -250,7 +250,8 @@
     .chart-card,
     .note-box,
     .quick-card,
-    .live-banner {
+    .live-banner,
+    .mobile-form-link {
       background: var(--surface);
       border: 1px solid var(--border);
       box-shadow: var(--shadow-soft);
@@ -354,7 +355,7 @@
       font-size: 1.08rem;
     }
 
-    .card p, .card li, .chart-card p, .quick-card p, .note-box p, .live-banner p {
+    .card p, .card li, .chart-card p, .quick-card p, .note-box p, .live-banner p, .mobile-form-link p {
       color: var(--muted);
       line-height: 1.74;
     }
@@ -510,6 +511,14 @@
 
     .note-box {
       padding: 18px 20px;
+      border-radius: 18px;
+      margin-top: 16px;
+    }
+
+    .mobile-form-link {
+      display: none;
+      text-align: center;
+      padding: 22px;
       border-radius: 18px;
       margin-top: 16px;
     }
@@ -723,6 +732,14 @@
       h1 { font-size: 2.45rem; }
       .quote-box { padding: 28px; }
       iframe { min-height: 560px; }
+
+      .embed-box {
+        display: none;
+      }
+
+      .mobile-form-link {
+        display: block;
+      }
     }
   </style>
 </head>
@@ -969,8 +986,19 @@
 
         <div class="card">
           <div class="embed-box">
-            <iframe id="formFrame" src="" title="Formulário da pesquisa"></iframe>
+            <iframe id="formFrame" src="" title="Formulário da pesquisa" loading="lazy"></iframe>
           </div>
+
+          <div class="mobile-form-link">
+            <p>
+              No celular, o formulário pode abrir melhor em tela cheia.
+              Toque no botão abaixo para responder normalmente.
+            </p>
+            <a class="btn btn-primary" id="mobileFormButton" href="" target="_blank" rel="noopener noreferrer">
+              Abrir formulário
+            </a>
+          </div>
+
           <div class="note-box">
             <strong>Importante:</strong> o formulário já está funcionando. O dashboard abaixo acompanha apenas as respostas atuais publicadas na planilha.
           </div>
@@ -1174,9 +1202,11 @@
     ];
 
     const formFrame = document.getElementById('formFrame');
+    const mobileFormButton = document.getElementById('mobileFormButton');
     const guideButton = document.getElementById('guideButton');
 
     if (formFrame) formFrame.src = FORM_PUBLIC_URL;
+    if (mobileFormButton) mobileFormButton.href = FORM_PUBLIC_URL.replace('?embedded=true', '');
     if (guideButton) guideButton.href = GUIDE_URL;
 
     const team = [
@@ -1527,6 +1557,7 @@
   </script>
 </body>
 </html>
+
 
 
 
