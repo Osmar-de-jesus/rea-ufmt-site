@@ -667,14 +667,14 @@
     }
 
     .reveal {
-      opacity: 0;
-      transform: translateY(24px);
+      opacity: 1;
+      transform: none;
       transition: opacity 0.7s ease, transform 0.7s ease;
     }
 
     .reveal.visible {
       opacity: 1;
-      transform: translateY(0);
+      transform: none;
     }
 
     @media (max-width: 1100px) {
@@ -755,15 +755,15 @@
 
         <div class="glass-card reveal">
           <span class="pill">Indicadores do projeto</span>
-          <h3 style="margin:0 0 12px;color:var(--primary);font-size:1.35rem;">Dados que ajudam a transformar a realidade acadêmica</h3>
+          <h3 style="margin:0 0 12px;color:var(--primary);font-size:1.35rem;">Dados da análise original do projeto</h3>
           <p style="margin:0;color:var(--muted);line-height:1.8;">
-            O projeto usa formulário online, ciência de dados, análise em Python e visualizações interativas para mapear barreiras, apoiar decisões e aproximar os estudantes do ecossistema de inovação.
+            Estes indicadores registram os principais resultados da análise original construída pelo grupo a partir de 92 respostas. O dashboard abaixo acompanha as respostas atuais do formulário.
           </p>
           <div class="stats">
-            <div class="stat"><strong id="heroTotal">--</strong><span>respostas registradas</span></div>
-            <div class="stat"><strong id="heroUnknownEit">--</strong><span>não conhecem o EIT</span></div>
-            <div class="stat"><strong id="heroPresencial">--</strong><span>presencial</span></div>
-            <div class="stat"><strong id="heroEad">--</strong><span>EaD</span></div>
+            <div class="stat"><strong>92</strong><span>respostas na análise original</span></div>
+            <div class="stat"><strong>65,2%</strong><span>nunca ouviram falar do EIT</span></div>
+            <div class="stat"><strong>72,8%</strong><span>ensino presencial</span></div>
+            <div class="stat"><strong>27,2%</strong><span>ensino EaD</span></div>
           </div>
         </div>
       </div>
@@ -855,10 +855,10 @@
         </div>
 
         <div class="grid-4">
-          <article class="card"><span class="pill">Etapa 1</span><h3>Coleta</h3><p>Aplicação do questionário online com participação aberta dos estudantes da UFMT.</p></article>
-          <article class="card"><span class="pill">Etapa 2</span><h3>Banco de respostas</h3><p>As respostas ficam guardadas no Google Forms e podem ser vinculadas a uma planilha do Google Sheets.</p></article>
-          <article class="card"><span class="pill">Etapa 3</span><h3>Leitura automática</h3><p>O dashboard do site lê os dados publicados da planilha e transforma tudo em gráficos interativos.</p></article>
-          <article class="card"><span class="pill">Etapa 4</span><h3>Socialização</h3><p>Site, dashboard e guia interativo apresentam os resultados de forma pública e visual.</p></article>
+          <article class="card"><span class="pill">Etapa 1</span><h3>Início do grupo</h3><p>Organização da equipe e amadurecimento da ideia dentro do percurso formativo.</p></article>
+          <article class="card"><span class="pill">Etapa 2</span><h3>Pesquisa e instrumento</h3><p>Desenvolvimento do questionário e definição dos eixos analíticos do projeto.</p></article>
+          <article class="card"><span class="pill">Etapa 3</span><h3>Coleta e análise</h3><p>Aplicação do formulário, leitura dos dados e consolidação dos resultados acadêmicos.</p></article>
+          <article class="card"><span class="pill">Etapa 4</span><h3>Socialização</h3><p>Publicação em site, dashboard e guia interativo para ampliar o acesso aos resultados.</p></article>
         </div>
       </div>
     </section>
@@ -868,15 +868,15 @@
         <div class="section-head">
           <h2>Quem participou</h2>
           <p>
-            Conforme novas respostas entram, os cartões abaixo podem ser atualizados automaticamente pelo dashboard conectado ao banco de dados.
+            Estes dados abaixo registram o retrato da análise original do projeto, construída a partir de 92 respondentes da UFMT.
           </p>
         </div>
 
         <div class="metric-grid">
-          <div class="metric"><strong id="metricTotal">--</strong><span>respondentes</span></div>
-          <div class="metric"><strong id="metricPresencial">--</strong><span>ensino presencial</span></div>
-          <div class="metric"><strong id="metricEad">--</strong><span>ensino EaD</span></div>
-          <div class="metric"><strong id="metricPreparo">--</strong><span>média de preparo</span></div>
+          <div class="metric"><strong>92</strong><span>respondentes da análise original</span></div>
+          <div class="metric"><strong>72,8%</strong><span>ensino presencial</span></div>
+          <div class="metric"><strong>27,2%</strong><span>ensino EaD</span></div>
+          <div class="metric"><strong>6,27</strong><span>média de preparo percebido</span></div>
         </div>
       </div>
     </section>
@@ -894,16 +894,16 @@
           <article class="card">
             <h3>Termômetro da inovação e informação</h3>
             <ul>
-              <li><strong id="eitUnknownText">--</strong> nunca ouviram falar do EIT.</li>
-              <li><strong id="eitKnownText">--</strong> conhecem e entendem as estruturas de apoio à inovação.</li>
-              <li><strong id="eitHeardText">--</strong> já ouviram falar, mas não compreendem.</li>
+              <li><strong>65,2%</strong> nunca ouviram falar do EIT.</li>
+              <li><strong>14,1%</strong> conhecem e entendem as estruturas de apoio à inovação.</li>
+              <li><strong>18,5%</strong> já ouviram falar, mas não compreendem.</li>
             </ul>
           </article>
           <article class="card">
             <h3>Médias de preparo e intenção</h3>
             <ul>
-              <li><strong id="preparoText">--</strong> de preparo percebido.</li>
-              <li><strong id="empreenderText">--</strong> de intenção de empreender.</li>
+              <li><strong>6,27/10</strong> de preparo percebido.</li>
+              <li><strong>6,20/10</strong> de intenção de empreender.</li>
               <li>Há forte demanda por orientação prática e por um guia digital passo a passo.</li>
             </ul>
           </article>
@@ -916,7 +916,7 @@
         <div class="section-head">
           <h2>Ranking das barreiras empreendedoras</h2>
           <p>
-            A visualização abaixo é atualizada com base nas respostas registradas no banco de dados da pesquisa.
+            Abaixo está o ranking dinâmico atualizado pelas respostas atuais do formulário publicado.
           </p>
         </div>
 
@@ -960,7 +960,7 @@
             <iframe id="formFrame" src="" title="Formulário da pesquisa"></iframe>
           </div>
           <div class="note-box">
-            <strong>Importante:</strong> o formulário já está funcionando. O dashboard ao vivo depende da leitura da planilha publicada em CSV.
+            <strong>Importante:</strong> o formulário já está funcionando. O dashboard abaixo acompanha as respostas atuais publicadas na planilha.
           </div>
         </div>
       </div>
@@ -971,15 +971,15 @@
         <div class="section-head">
           <h2>Dashboard interativo</h2>
           <p>
-            Este painel lê as respostas publicadas da planilha e transforma os dados em métricas e gráficos interativos dentro do próprio site.
+            Este painel acompanha as respostas atuais do formulário publicado. Já os resultados fixos apresentados ao longo do site registram a análise original do projeto, construída a partir de 92 respostas.
           </p>
         </div>
 
         <div class="dashboard-top">
-          <article class="quick-card"><h3>Total de respostas</h3><strong id="dashTotal">--</strong><p>Quantidade total de formulários enviados.</p></article>
-          <article class="quick-card"><h3>Não conhecem o EIT</h3><strong id="dashEitUnknown">--</strong><p>Percentual dos que responderam “nunca ouvi falar”.</p></article>
-          <article class="quick-card"><h3>Presencial</h3><strong id="dashPresencial">--</strong><p>Participação dos estudantes presenciais.</p></article>
-          <article class="quick-card"><h3>Intenção empreendedora</h3><strong id="dashEmpreender">--</strong><p>Média da nota de intenção de empreender.</p></article>
+          <article class="quick-card"><h3>Total de respostas atuais</h3><strong id="dashTotal">--</strong><p>Quantidade total de respostas lidas na planilha publicada.</p></article>
+          <article class="quick-card"><h3>Não conhecem o EIT</h3><strong id="dashEitUnknown">--</strong><p>Percentual nas respostas atuais do formulário.</p></article>
+          <article class="quick-card"><h3>Presencial</h3><strong id="dashPresencial">--</strong><p>Participação atual dos estudantes presenciais.</p></article>
+          <article class="quick-card"><h3>Intenção empreendedora</h3><strong id="dashEmpreender">--</strong><p>Média atual da nota de intenção de empreender.</p></article>
         </div>
 
         <div class="chart-grid">
@@ -1030,17 +1030,17 @@
         <div class="section-head">
           <h2>Nossa trajetória</h2>
           <p>
-            O REA foi construído em etapas, da formulação da ideia até a socialização dos achados em ambiente digital.
+            O percurso do grupo foi construído ao longo dos anos, desde a formação e amadurecimento da equipe até a consolidação do projeto e sua continuidade em 2026.
           </p>
         </div>
 
         <div class="timeline">
-          <div class="timeline-item"><h3>2024 — Surgimento da ideia</h3><p>Identificação da necessidade de analisar barreiras empreendedoras dentro da UFMT.</p></div>
-          <div class="timeline-item"><h3>2025 — Elaboração da pesquisa</h3><p>Construção do instrumento de pesquisa, definição da metodologia e estruturação do projeto.</p></div>
-          <div class="timeline-item"><h3>2025 — Limpeza e análise</h3><p>Organização e tratamento dos dados com Python e Google Colab.</p></div>
-          <div class="timeline-item"><h3>2025 — Socialização</h3><p>Apresentação inicial dos resultados e desenvolvimento do guia interativo.</p></div>
-          <div class="timeline-item"><h3>2026 — Coleta das respostas</h3><p>Aplicação do questionário e consolidação das respostas da comunidade acadêmica.</p></div>
-          <div class="timeline-item"><h3>2026 — Continuidade</h3><p>Proposta de atualização anual do REA como termômetro da inovação na UFMT.</p></div>
+          <div class="timeline-item"><h3>2022 — Formação e primeiros vínculos</h3><p>Início da trajetória do grupo, construção das primeiras conexões acadêmicas e aproximação com temas ligados à formação e à universidade.</p></div>
+          <div class="timeline-item"><h3>2023 — Maturação das ideias</h3><p>Amadurecimento das discussões e observação mais clara das dificuldades enfrentadas pelos estudantes em relação à inovação, permanência e empreendedorismo.</p></div>
+          <div class="timeline-item"><h3>2024 — Surgimento da proposta</h3><p>Identificação mais concreta da necessidade de investigar as barreiras empreendedoras dentro da UFMT e transformar essa inquietação em projeto.</p></div>
+          <div class="timeline-item"><h3>2025 — Elaboração da pesquisa</h3><p>Construção do instrumento de pesquisa, definição da metodologia, organização da coleta e estruturação analítica do trabalho.</p></div>
+          <div class="timeline-item"><h3>2025 — Análise e socialização</h3><p>Tratamento dos dados, consolidação dos principais resultados e desenvolvimento das formas de apresentação pública do REA.</p></div>
+          <div class="timeline-item"><h3>2026 — Continuidade</h3><p>Fortalecimento da proposta de manter o REA vivo, atualizado e útil como termômetro institucional da inovação e do empreendedorismo na UFMT.</p></div>
         </div>
       </div>
     </section>
@@ -1127,15 +1127,12 @@
         Seminário Integrador VI • REA – Diagnóstico de Barreiras Empreendedoras
       </div>
       <div>
-        Site pronto para GitHub Pages com formulário e dashboard conectados.
+        Site pronto para GitHub Pages com indicadores fixos da análise original e dashboard atualizado pelo formulário.
       </div>
     </div>
   </footer>
 
   <script>
-    // =========================
-    // CONFIGURAÇÕES PRINCIPAIS
-    // =========================
     const FORM_PUBLIC_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSebwGCVSWrCfOosVJ58doCx5Gf0qtTyPv1QSMD6mxScfwYPcw/viewform?embedded=true';
     const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQcSMHNIuR68vOrkSZ0oYKDhBE7IHfqBO1u2XiI3VSqu9HDp4TMgZFfgJA1ZC-smSCAwe6ecMwoF8ke/pub?gid=60774319&single=true&output=csv';
     const GUIDE_URL = 'https://notebooklm.google.com/notebook/e0e0263e-0928-48b9-ba12-c148d3c10782';
@@ -1148,18 +1145,12 @@
       { modalidade: 'EaD', eit: 'Nunca ouvi falar', preparo: 4, empreender: 5, barreira: 'Distância/Acesso' }
     ];
 
-    // =========================
-    // LINKS DINÂMICOS
-    // =========================
     const formFrame = document.getElementById('formFrame');
     const guideButton = document.getElementById('guideButton');
 
     if (formFrame) formFrame.src = FORM_PUBLIC_URL;
     if (guideButton) guideButton.href = GUIDE_URL;
 
-    // =========================
-    // EQUIPE
-    // =========================
     const team = [
       'Adriano Rodrigues da Silva',
       'Caroline dos Anjos Vaez',
@@ -1192,22 +1183,23 @@
       });
     }
 
-    // =========================
-    // ANIMAÇÃO DE ENTRADA
-    // =========================
     const reveals = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.15 });
-    reveals.forEach(item => observer.observe(item));
+    document.addEventListener('DOMContentLoaded', () => {
+      reveals.forEach(item => item.classList.add('visible'));
 
-    // =========================
-    // MENU ATIVO
-    // =========================
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+            }
+          });
+        }, { threshold: 0.15 });
+
+        reveals.forEach(item => observer.observe(item));
+      }
+    });
+
     const sections = document.querySelectorAll('main section[id]');
     const menuLinks = document.querySelectorAll('#menu a');
 
@@ -1229,9 +1221,6 @@
       });
     });
 
-    // =========================
-    // DASHBOARD
-    // =========================
     let modalityChartInstance;
     let eitChartInstance;
     let barrierChartInstance;
@@ -1332,34 +1321,14 @@
       });
     }
 
-    function updateSummaryCards(data) {
+    function updateDashboardCards(data) {
       const total = data.length;
       const modalities = countBy(data, 'modalidade');
       const eit = countBy(data, 'eit');
-      const avgPreparo = average(data.map(item => item.preparo).filter(value => value || value === 0));
       const avgEmpreender = average(data.map(item => item.empreender).filter(value => value || value === 0));
 
       const unknownEit = eit['Nunca ouvi falar'] || eit['Não conheço'] || 0;
-      const heardOnly = eit['Já ouvi falar, mas não compreendo'] || eit['Já ouvi falar'] || 0;
-      const knowWell = eit['Conheço e entendo'] || eit['Conheço bem'] || 0;
       const presencial = modalities['Presencial'] || 0;
-      const ead = modalities['EaD'] || 0;
-
-      document.getElementById('heroTotal').textContent = total || '--';
-      document.getElementById('heroUnknownEit').textContent = percentage(unknownEit, total);
-      document.getElementById('heroPresencial').textContent = percentage(presencial, total);
-      document.getElementById('heroEad').textContent = percentage(ead, total);
-
-      document.getElementById('metricTotal').textContent = total || '--';
-      document.getElementById('metricPresencial').textContent = percentage(presencial, total);
-      document.getElementById('metricEad').textContent = percentage(ead, total);
-      document.getElementById('metricPreparo').textContent = total ? avgPreparo.toFixed(2).replace('.', ',') : '--';
-
-      document.getElementById('eitUnknownText').textContent = percentage(unknownEit, total);
-      document.getElementById('eitKnownText').textContent = percentage(knowWell, total);
-      document.getElementById('eitHeardText').textContent = percentage(heardOnly, total);
-      document.getElementById('preparoText').textContent = total ? avgPreparo.toFixed(2).replace('.', ',') + '/10' : '--';
-      document.getElementById('empreenderText').textContent = total ? avgEmpreender.toFixed(2).replace('.', ',') + '/10' : '--';
 
       document.getElementById('dashTotal').textContent = total || '--';
       document.getElementById('dashEitUnknown').textContent = percentage(unknownEit, total);
@@ -1455,7 +1424,7 @@
 
       if (!SHEET_CSV_URL) {
         status.textContent = 'Dashboard em modo de demonstração.';
-        updateSummaryCards(FALLBACK_DATA);
+        updateDashboardCards(FALLBACK_DATA);
         renderCharts(FALLBACK_DATA);
         return;
       }
@@ -1471,13 +1440,13 @@
           throw new Error('Sem linhas válidas na planilha publicada.');
         }
 
-        updateSummaryCards(normalized);
+        updateDashboardCards(normalized);
         renderCharts(normalized);
-        status.textContent = `Dashboard atualizado com ${normalized.length} respostas.`;
+        status.textContent = `Dashboard atualizado com ${normalized.length} respostas atuais.`;
       } catch (error) {
         console.error(error);
         status.textContent = 'Não foi possível ler a planilha publicada. O painel ficou em modo de demonstração.';
-        updateSummaryCards(FALLBACK_DATA);
+        updateDashboardCards(FALLBACK_DATA);
         renderCharts(FALLBACK_DATA);
       }
     }
@@ -1487,6 +1456,7 @@
   </script>
 </body>
 </html>
+
 
 
 
