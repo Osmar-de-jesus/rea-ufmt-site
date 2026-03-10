@@ -7,19 +7,22 @@
   <meta name="description" content="Projeto REA UFMT: diagnóstico de barreiras empreendedoras, guia interativo, questionário e dashboard com base em dados." />
   <style>
     :root {
-      --bg: #f3f7fc;
-      --surface: #ffffff;
+      --bg: #f2f6fb;
+      --surface: rgba(255,255,255,0.92);
+      --surface-solid: #ffffff;
       --surface-soft: #f8fbff;
-      --primary: #0d2f5f;
-      --primary-2: #15529a;
+      --primary: #0b2d61;
+      --primary-2: #174f96;
+      --primary-3: #2d7bc7;
       --accent: #d8a437;
-      --accent-2: #2fb7c9;
+      --accent-2: #37bfd0;
       --text: #1d2734;
-      --muted: #5f6d7d;
-      --border: rgba(13, 47, 95, 0.12);
-      --shadow: 0 18px 50px rgba(13, 47, 95, 0.12);
-      --radius: 22px;
-      --radius-sm: 16px;
+      --muted: #627180;
+      --border: rgba(11, 45, 97, 0.12);
+      --shadow: 0 18px 55px rgba(11, 45, 97, 0.12);
+      --shadow-soft: 0 12px 30px rgba(11, 45, 97, 0.08);
+      --radius: 24px;
+      --radius-sm: 18px;
       --max-width: 1180px;
     }
 
@@ -30,9 +33,22 @@
       font-family: Arial, Helvetica, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at top right, rgba(47,183,201,0.12), transparent 26%),
-        radial-gradient(circle at top left, rgba(216,164,55,0.10), transparent 22%),
-        linear-gradient(180deg, #f8fbff 0%, #eef5fd 100%);
+        radial-gradient(circle at top left, rgba(55,191,208,0.10), transparent 24%),
+        radial-gradient(circle at top right, rgba(216,164,55,0.10), transparent 24%),
+        linear-gradient(180deg, #f8fbff 0%, #edf4fb 38%, #f6f9fd 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(11,45,97,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(11,45,97,0.025) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+      z-index: -1;
     }
 
     a { color: inherit; text-decoration: none; }
@@ -47,13 +63,13 @@
       position: sticky;
       top: 0;
       z-index: 1000;
-      background: rgba(255,255,255,0.88);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(13, 47, 95, 0.08);
+      background: rgba(255,255,255,0.78);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(11, 45, 97, 0.08);
     }
 
     .nav {
-      min-height: 76px;
+      min-height: 78px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -63,29 +79,32 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       font-weight: 800;
       color: var(--primary);
     }
 
-    .brand-badge {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, var(--primary), var(--primary-2));
-      color: #fff;
-      box-shadow: var(--shadow);
-      font-weight: 900;
+    .brand-logo {
+      width: 58px;
+      height: 58px;
+      object-fit: contain;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.9);
+      padding: 4px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(11,45,97,0.08);
     }
 
-    .brand small {
+    .brand-title {
+      line-height: 1.1;
+    }
+
+    .brand-title small {
       display: block;
-      font-size: 0.78rem;
       color: var(--muted);
+      font-size: 0.8rem;
       font-weight: 700;
-      margin-top: 2px;
+      margin-top: 4px;
     }
 
     .menu {
@@ -100,47 +119,89 @@
       font-weight: 700;
       font-size: 0.95rem;
       transition: 0.25s ease;
+      position: relative;
+    }
+
+    .menu a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transition: width 0.25s ease;
     }
 
     .menu a:hover,
     .menu a.active { color: var(--primary); }
+
+    .menu a:hover::after,
+    .menu a.active::after { width: 100%; }
 
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      min-height: 48px;
+      min-height: 50px;
       border: 0;
       border-radius: 999px;
-      padding: 0 20px;
+      padding: 0 22px;
       font-weight: 800;
       cursor: pointer;
       transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
     }
 
-    .btn:hover { transform: translateY(-2px); }
+    .btn:hover { transform: translateY(-3px); }
 
     .btn-primary {
       background: linear-gradient(135deg, var(--primary), var(--primary-2));
       color: #fff;
-      box-shadow: 0 16px 30px rgba(21, 82, 154, 0.26);
+      box-shadow: 0 18px 32px rgba(23,79,150,0.24);
     }
 
     .btn-secondary {
-      background: #fff;
+      background: rgba(255,255,255,0.9);
       color: var(--primary);
-      border: 1px solid rgba(13, 47, 95, 0.15);
+      border: 1px solid rgba(11,45,97,0.14);
+      box-shadow: var(--shadow-soft);
     }
 
     .hero {
-      padding: 84px 0 46px;
+      position: relative;
+      padding: 90px 0 54px;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(10px);
+      z-index: -1;
+    }
+
+    .hero::before {
+      width: 340px;
+      height: 340px;
+      top: -80px;
+      right: -80px;
+      background: radial-gradient(circle, rgba(55,191,208,0.18) 0%, rgba(55,191,208,0) 70%);
+    }
+
+    .hero::after {
+      width: 300px;
+      height: 300px;
+      left: -100px;
+      bottom: -30px;
+      background: radial-gradient(circle, rgba(216,164,55,0.16) 0%, rgba(216,164,55,0) 70%);
     }
 
     .hero-grid {
       display: grid;
-      grid-template-columns: 1.12fr 0.88fr;
-      gap: 24px;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
       align-items: center;
     }
 
@@ -150,8 +211,8 @@
       gap: 10px;
       padding: 9px 14px;
       border-radius: 999px;
-      background: rgba(21, 82, 154, 0.08);
-      border: 1px solid rgba(21, 82, 154, 0.12);
+      background: rgba(23, 79, 150, 0.08);
+      border: 1px solid rgba(23, 79, 150, 0.12);
       color: var(--primary);
       font-size: 0.84rem;
       font-weight: 800;
@@ -160,15 +221,16 @@
 
     h1 {
       margin: 0 0 16px;
-      line-height: 1.04;
-      font-size: clamp(2.2rem, 5vw, 4.4rem);
+      line-height: 1.03;
+      font-size: clamp(2.35rem, 5vw, 4.7rem);
       color: var(--primary);
+      letter-spacing: -0.02em;
     }
 
     .lead {
-      margin: 0 0 26px;
+      margin: 0 0 28px;
       font-size: 1.08rem;
-      line-height: 1.75;
+      line-height: 1.82;
       color: var(--muted);
       max-width: 720px;
     }
@@ -179,28 +241,36 @@
       gap: 14px;
     }
 
-    .glass-card, .card {
-      background: rgba(255,255,255,0.95);
+    .glass-card,
+    .card,
+    .stat,
+    .metric,
+    .barrier,
+    .timeline-item,
+    .team-card {
+      background: var(--surface);
       border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(10px);
     }
 
     .glass-card {
-      padding: 24px;
+      padding: 26px;
+      border-radius: 28px;
       position: relative;
       overflow: hidden;
+      box-shadow: var(--shadow);
     }
 
     .glass-card::after {
       content: "";
       position: absolute;
-      width: 220px;
-      height: 220px;
-      right: -60px;
-      bottom: -60px;
+      width: 230px;
+      height: 230px;
+      right: -72px;
+      bottom: -72px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(216,164,55,0.26) 0%, rgba(216,164,55,0) 70%);
+      background: radial-gradient(circle, rgba(216,164,55,0.24) 0%, rgba(216,164,55,0) 70%);
       pointer-events: none;
     }
 
@@ -209,7 +279,7 @@
       padding: 7px 12px;
       border-radius: 999px;
       background: rgba(216,164,55,0.18);
-      color: #8b691f;
+      color: #88661e;
       font-size: 0.8rem;
       font-weight: 800;
       margin-bottom: 12px;
@@ -223,38 +293,36 @@
     }
 
     .stat {
-      background: #fff;
-      border: 1px solid var(--border);
       border-radius: 18px;
       padding: 18px;
-      box-shadow: 0 10px 26px rgba(13,47,95,0.05);
     }
 
     .stat strong {
       display: block;
-      font-size: 1.68rem;
+      font-size: 1.7rem;
       color: var(--primary);
       margin-bottom: 6px;
     }
 
     section {
-      padding: 34px 0;
+      padding: 38px 0;
     }
 
     .section-head {
-      margin-bottom: 22px;
+      margin-bottom: 24px;
     }
 
     .section-head h2 {
       margin: 0 0 10px;
       color: var(--primary);
-      font-size: clamp(1.7rem, 3vw, 2.5rem);
+      font-size: clamp(1.8rem, 3vw, 2.7rem);
+      letter-spacing: -0.02em;
     }
 
     .section-head p {
       margin: 0;
       color: var(--muted);
-      line-height: 1.72;
+      line-height: 1.78;
       max-width: 860px;
     }
 
@@ -268,13 +336,16 @@
     .grid-4 { grid-template-columns: repeat(4, 1fr); }
 
     .card {
-      padding: 22px;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      padding: 24px;
+      border-radius: var(--radius);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     }
 
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 22px 44px rgba(13,47,95,0.10);
+    .card:hover,
+    .team-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 24px 48px rgba(11,45,97,0.12);
+      border-color: rgba(23,79,150,0.18);
     }
 
     .card h3 {
@@ -285,7 +356,7 @@
 
     .card p, .card li {
       color: var(--muted);
-      line-height: 1.72;
+      line-height: 1.74;
     }
 
     .metric-grid {
@@ -295,12 +366,20 @@
     }
 
     .metric {
-      background: linear-gradient(180deg, #fff 0%, #f5f9ff 100%);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      padding: 24px 18px;
+      border-radius: 24px;
+      padding: 26px 18px;
       text-align: center;
-      box-shadow: 0 10px 28px rgba(13,47,95,0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent), var(--accent-2));
     }
 
     .metric strong {
@@ -311,15 +390,16 @@
     }
 
     .feature-icon {
-      width: 54px;
-      height: 54px;
-      border-radius: 16px;
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
       display: grid;
       place-items: center;
-      background: linear-gradient(135deg, rgba(21,82,154,0.12), rgba(47,183,201,0.16));
+      background: linear-gradient(135deg, rgba(23,79,150,0.12), rgba(55,191,208,0.16));
       color: var(--primary);
-      font-size: 1.3rem;
+      font-size: 1.35rem;
       margin-bottom: 14px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
     }
 
     .barrier-list {
@@ -328,11 +408,8 @@
     }
 
     .barrier {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 16px;
-      box-shadow: 0 10px 28px rgba(13,47,95,0.05);
+      border-radius: 20px;
+      padding: 18px;
     }
 
     .barrier-top {
@@ -347,7 +424,7 @@
 
     .progress {
       width: 100%;
-      height: 11px;
+      height: 12px;
       background: #e6eef8;
       border-radius: 999px;
       overflow: hidden;
@@ -358,6 +435,7 @@
       height: 100%;
       border-radius: 999px;
       background: linear-gradient(90deg, var(--primary), var(--accent), var(--accent-2));
+      box-shadow: 0 0 18px rgba(55,191,208,0.16);
     }
 
     .timeline {
@@ -371,19 +449,16 @@
       position: absolute;
       top: 0;
       bottom: 0;
-      left: 15px;
+      left: 16px;
       width: 3px;
       border-radius: 999px;
-      background: linear-gradient(180deg, var(--primary), rgba(47,183,201,0.14));
+      background: linear-gradient(180deg, var(--primary), rgba(55,191,208,0.18));
     }
 
     .timeline-item {
       position: relative;
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 18px 18px 18px 56px;
-      box-shadow: 0 10px 26px rgba(13,47,95,0.04);
+      border-radius: 20px;
+      padding: 20px 20px 20px 60px;
     }
 
     .timeline-item::before {
@@ -392,69 +467,143 @@
       width: 18px;
       height: 18px;
       border-radius: 50%;
-      left: 7px;
-      top: 22px;
+      left: 8px;
+      top: 25px;
       background: var(--accent);
       border: 4px solid #fff;
-      box-shadow: 0 0 0 2px rgba(13,47,95,0.10);
+      box-shadow: 0 0 0 2px rgba(11,45,97,0.10);
+    }
+
+    .timeline-item h3 {
+      margin: 0 0 8px;
+      color: var(--primary);
+      font-size: 1.06rem;
+    }
+
+    .timeline-item p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.72;
     }
 
     .embed-box {
       width: 100%;
-      min-height: 460px;
+      min-height: 480px;
       border: 1px solid var(--border);
-      border-radius: 22px;
+      border-radius: 24px;
       overflow: hidden;
-      background: linear-gradient(180deg, #f7fbff 0%, #eef4fc 100%);
-      box-shadow: 0 10px 30px rgba(13,47,95,0.05);
+      background: linear-gradient(180deg, #f7fbff 0%, #edf4fb 100%);
+      box-shadow: var(--shadow-soft);
+      position: relative;
+    }
+
+    .embed-box::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent), var(--accent-2));
+      z-index: 1;
     }
 
     iframe {
       width: 100%;
-      min-height: 560px;
+      min-height: 590px;
       border: 0;
       background: #fff;
+      position: relative;
+      z-index: 0;
     }
 
-    .placeholder {
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .team-card {
+      border-radius: 24px;
+      padding: 28px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+    }
+
+    .team-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, var(--primary), var(--accent), var(--accent-2));
+    }
+
+    .team-avatar {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
       display: grid;
       place-items: center;
-      text-align: center;
-      min-height: 460px;
-      padding: 24px;
-      color: var(--muted);
+      margin: 0 auto 14px;
+      background: linear-gradient(135deg, rgba(23,79,150,0.12), rgba(55,191,208,0.14));
+      color: var(--primary);
+      font-size: 1.45rem;
+      font-weight: 900;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.65);
     }
 
     .team-card h3 {
-      margin-bottom: 6px;
+      margin: 0 0 8px;
+      font-size: 1rem;
+      color: var(--primary);
+      line-height: 1.45;
+      min-height: 44px;
     }
 
     .team-role {
       color: var(--primary-2);
       font-size: 0.92rem;
       font-weight: 800;
-      margin-bottom: 10px;
     }
 
     .quote-box {
       background: linear-gradient(135deg, var(--primary), #133f79);
       color: #fff;
-      border-radius: 28px;
-      padding: 34px;
+      border-radius: 30px;
+      padding: 38px;
       box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quote-box::after {
+      content: "";
+      position: absolute;
+      right: -60px;
+      top: -60px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0) 70%);
     }
 
     .quote-box h2, .quote-box p {
       color: #fff;
+      position: relative;
+      z-index: 1;
     }
 
     .quote-box p {
-      opacity: 0.94;
-      line-height: 1.8;
+      opacity: 0.95;
+      line-height: 1.82;
+      max-width: 860px;
     }
 
     footer {
-      padding: 26px 0 48px;
+      padding: 28px 0 50px;
       color: var(--muted);
       font-size: 0.95rem;
     }
@@ -464,14 +613,14 @@
       justify-content: space-between;
       gap: 20px;
       flex-wrap: wrap;
-      border-top: 1px solid rgba(13,47,95,0.1);
+      border-top: 1px solid rgba(11,45,97,0.1);
       padding-top: 18px;
     }
 
     .reveal {
       opacity: 0;
-      transform: translateY(22px);
-      transition: opacity 0.65s ease, transform 0.65s ease;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
     }
 
     .reveal.visible {
@@ -479,29 +628,20 @@
       transform: translateY(0);
     }
 
-    @media (max-width: 1024px) {
+    @media (max-width: 1100px) {
       .hero-grid,
-      .grid-3,
       .grid-4,
+      .team-grid,
       .metric-grid {
         grid-template-columns: 1fr 1fr;
       }
     }
 
-    @media (max-width: 760px) {
+    @media (max-width: 820px) {
       .nav {
         flex-direction: column;
         align-items: flex-start;
         padding: 14px 0;
-      }
-
-      .menu,
-      .hero-actions {
-        gap: 12px;
-      }
-
-      .hero {
-        padding-top: 54px;
       }
 
       .hero-grid,
@@ -509,12 +649,18 @@
       .grid-3,
       .grid-4,
       .metric-grid,
-      .stats {
+      .stats,
+      .team-grid {
         grid-template-columns: 1fr;
       }
 
-      h1 { font-size: 2.3rem; }
-      .quote-box { padding: 26px; }
+      .hero {
+        padding-top: 58px;
+      }
+
+      h1 { font-size: 2.45rem; }
+      .quote-box { padding: 28px; }
+      iframe { min-height: 520px; }
     }
   </style>
 </head>
@@ -522,8 +668,8 @@
   <header class="topbar">
     <div class="container nav">
       <a class="brand" href="#inicio">
-        <div class="brand-badge">R</div>
-        <div>
+        <img src="arta logo gifemct.png" alt="Logo do curso Ciência e Tecnologia" class="brand-logo" />
+        <div class="brand-title">
           REA UFMT
           <small>Diagnóstico de Barreiras Empreendedoras</small>
         </div>
@@ -548,9 +694,7 @@
           <span class="eyebrow">Seminário Integrador VI • Bacharelado em Ciência e Tecnologia • UFMT</span>
           <h1>Diagnóstico de Barreiras Empreendedoras na UFMT</h1>
           <p class="lead">
-            Um guia baseado em dados para compreender os obstáculos à inovação, ao empreendedorismo
-            e à conexão entre academia e mercado. Transformamos dados em diagnóstico para ajudar a
-            UFMT a enxergar, compreender e enfrentar os desafios vividos por seus estudantes.
+            Um guia baseado em dados para compreender os obstáculos à inovação, ao empreendedorismo e à conexão entre academia e mercado. Transformamos dados em diagnóstico para ajudar a UFMT a enxergar, compreender e enfrentar as barreiras vividas por seus estudantes.
           </p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#questionario">Responder Questionário</a>
@@ -562,9 +706,8 @@
         <div class="glass-card reveal">
           <span class="pill">Indicadores do projeto</span>
           <h3 style="margin:0 0 12px;color:var(--primary);font-size:1.35rem;">Dados que ajudam a transformar a realidade acadêmica</h3>
-          <p style="margin:0;color:var(--muted);line-height:1.75;">
-            O projeto usa formulário online, ciência de dados, análise em Python e visualizações interativas
-            para mapear barreiras, apoiar decisões e aproximar os estudantes do ecossistema de inovação.
+          <p style="margin:0;color:var(--muted);line-height:1.8;">
+            O projeto usa formulário online, ciência de dados, análise em Python e visualizações interativas para mapear barreiras, apoiar decisões e aproximar os estudantes do ecossistema de inovação.
           </p>
           <div class="stats">
             <div class="stat"><strong>92</strong><span>estudantes participantes</span></div>
@@ -581,10 +724,7 @@
         <div class="section-head">
           <h2>Sobre o projeto</h2>
           <p>
-            O REA – Diagnóstico de Barreiras Empreendedoras foi desenvolvido no curso de Bacharelado em
-            Ciência e Tecnologia da UFMT, dentro do Seminário Integrador VI, como um Recurso Educacional
-            Aberto. O projeto investiga por que muitos estudantes com potencial inovador ainda enfrentam
-            barreiras para empreender, acessar apoio institucional e transformar conhecimento em iniciativa.
+            O REA – Diagnóstico de Barreiras Empreendedoras foi desenvolvido no curso de Bacharelado em Ciência e Tecnologia da UFMT, dentro do Seminário Integrador VI, como um Recurso Educacional Aberto. O projeto investiga por que muitos estudantes com potencial inovador ainda enfrentam barreiras para empreender, acessar apoio institucional e transformar conhecimento em iniciativa.
           </p>
         </div>
 
@@ -592,26 +732,17 @@
           <article class="card">
             <div class="feature-icon">📘</div>
             <h3>O que é o REA</h3>
-            <p>
-              Um recurso educacional aberto baseado em dados, construído para informar, orientar e apoiar a
-              comunidade acadêmica por meio de diagnóstico, socialização dos resultados e ambiente interativo.
-            </p>
+            <p>Um recurso educacional aberto baseado em dados, construído para informar, orientar e apoiar a comunidade acadêmica por meio de diagnóstico, socialização dos resultados e ambiente interativo.</p>
           </article>
           <article class="card">
             <div class="feature-icon">📊</div>
             <h3>Baseado em dados reais</h3>
-            <p>
-              A proposta utiliza questionário, organização dos dados, limpeza com Python, análise exploratória
-              e produção de visualizações claras para apoiar leitura e tomada de decisão.
-            </p>
+            <p>A proposta utiliza questionário, organização dos dados, limpeza com Python, análise exploratória e produção de visualizações claras para apoiar leitura e tomada de decisão.</p>
           </article>
           <article class="card">
             <div class="feature-icon">🎯</div>
             <h3>Impacto institucional</h3>
-            <p>
-              O diagnóstico busca gerar valor para estudantes, professores, gestores e parceiros, tornando mais
-              visíveis as lacunas entre universidade, inovação e mercado.
-            </p>
+            <p>O diagnóstico busca gerar valor para estudantes, professores, gestores e parceiros, tornando mais visíveis as lacunas entre universidade, inovação e mercado.</p>
           </article>
         </div>
       </div>
@@ -622,8 +753,7 @@
         <div class="section-head">
           <h2>O problema central</h2>
           <p>
-            Muitos estudantes têm interesse em inovar e empreender, mas esbarram em barreiras que travam esse
-            movimento. O projeto investiga essas dificuldades para transformá-las em conhecimento útil e ação.
+            Muitos estudantes têm interesse em inovar e empreender, mas esbarram em barreiras que travam esse movimento. O projeto investiga essas dificuldades para transformá-las em conhecimento útil e ação.
           </p>
         </div>
 
@@ -643,8 +773,7 @@
         <div class="section-head">
           <h2>Coleta e divulgação</h2>
           <p>
-            A pesquisa foi construída com esforço de engajamento e alcance dentro da comunidade acadêmica.
-            A divulgação combinou canais digitais, comunicação visual e contato institucional para ampliar a participação.
+            A pesquisa foi construída com esforço de engajamento e alcance dentro da comunidade acadêmica. A divulgação combinou canais digitais, comunicação visual e contato institucional para ampliar a participação.
           </p>
         </div>
 
@@ -660,10 +789,7 @@
           </article>
           <article class="card">
             <h3>Objetivo dessa etapa</h3>
-            <p>
-              Garantir uma coleta consistente, alcançar diferentes perfis de estudantes e respeitar os fluxos
-              institucionais ligados à extensão e à socialização do projeto dentro da universidade.
-            </p>
+            <p>Garantir uma coleta consistente, alcançar diferentes perfis de estudantes e respeitar os fluxos institucionais ligados à extensão e à socialização do projeto dentro da universidade.</p>
           </article>
         </div>
       </div>
@@ -674,32 +800,15 @@
         <div class="section-head">
           <h2>Metodologia</h2>
           <p>
-            O projeto foi organizado para unir pesquisa de campo, ciência de dados e comunicação institucional.
-            Depois da coleta, os dados foram tratados e preparados para análise em ambiente computacional.
+            O projeto foi organizado para unir pesquisa de campo, ciência de dados e comunicação institucional. Depois da coleta, os dados foram tratados e preparados para análise em ambiente computacional.
           </p>
         </div>
 
         <div class="grid-4">
-          <article class="card">
-            <span class="pill">Etapa 1</span>
-            <h3>Coleta</h3>
-            <p>Aplicação do questionário online com participação de 92 estudantes da UFMT.</p>
-          </article>
-          <article class="card">
-            <span class="pill">Etapa 2</span>
-            <h3>Limpeza dos dados</h3>
-            <p>Uso de Python no Google Colab para remover erros, organizar respostas e padronizar informações.</p>
-          </article>
-          <article class="card">
-            <span class="pill">Etapa 3</span>
-            <h3>Análise exploratória</h3>
-            <p>Identificação das principais barreiras, médias, padrões e insights relevantes para o diagnóstico.</p>
-          </article>
-          <article class="card">
-            <span class="pill">Etapa 4</span>
-            <h3>Socialização</h3>
-            <p>Criação de dashboard, site e guia interativo para ampliar o acesso aos resultados.</p>
-          </article>
+          <article class="card"><span class="pill">Etapa 1</span><h3>Coleta</h3><p>Aplicação do questionário online com participação de 92 estudantes da UFMT.</p></article>
+          <article class="card"><span class="pill">Etapa 2</span><h3>Limpeza dos dados</h3><p>Uso de Python no Google Colab para remover erros, organizar respostas e padronizar informações.</p></article>
+          <article class="card"><span class="pill">Etapa 3</span><h3>Análise exploratória</h3><p>Identificação das principais barreiras, médias, padrões e insights relevantes para o diagnóstico.</p></article>
+          <article class="card"><span class="pill">Etapa 4</span><h3>Socialização</h3><p>Criação do dashboard, do site e do guia interativo para ampliar o acesso aos resultados.</p></article>
         </div>
       </div>
     </section>
@@ -717,7 +826,7 @@
           <div class="metric"><strong>92</strong><span>respondentes</span></div>
           <div class="metric"><strong>72,8%</strong><span>ensino presencial</span></div>
           <div class="metric"><strong>27,2%</strong><span>ensino EaD</span></div>
-          <div class="metric"><strong>diverso</strong><span>perfil de áreas de estudo</span></div>
+          <div class="metric"><strong>6,27</strong><span>preparo percebido</span></div>
         </div>
       </div>
     </section>
@@ -758,7 +867,7 @@
         <div class="section-head">
           <h2>Ranking das barreiras empreendedoras</h2>
           <p>
-            O diagnóstico identificou um conjunto claro de obstáculos à inovação. Abaixo está uma visualização já pronta para o site.
+            O diagnóstico identificou um conjunto claro de obstáculos à inovação. Abaixo está a visualização já pronta para o site.
           </p>
         </div>
 
@@ -778,17 +887,11 @@
         <div class="grid-2">
           <article class="card">
             <h3>Um limitador qualitativo crítico</h3>
-            <p>
-              Polos como Rondonópolis e Guarantã do Norte evidenciam a barreira de distância e acesso. Embora a frequência absoluta seja menor,
-              o efeito é profundo: parte do estudante EaD fica geograficamente afastada de laboratórios, eventos e networking presencial.
-            </p>
+            <p>Polos como Rondonópolis e Guarantã do Norte evidenciam a barreira de distância e acesso. Embora a frequência absoluta seja menor, o efeito é profundo: parte do estudante EaD fica geograficamente afastada de laboratórios, eventos e networking presencial.</p>
           </article>
           <article class="card">
             <h3>Leitura institucional</h3>
-            <p>
-              A inovação na UFMT ainda depende muito de infraestrutura física centralizada. Esse cenário reforça a necessidade de ampliar apoio,
-              acesso remoto e integração para os discentes que estão fora do campus central.
-            </p>
+            <p>A inovação na UFMT ainda depende muito de infraestrutura física centralizada. Esse cenário reforça a necessidade de ampliar apoio, acesso remoto e integração para os discentes que estão fora do campus central.</p>
           </article>
         </div>
       </div>
@@ -806,9 +909,7 @@
         <div class="grid-2">
           <article class="card">
             <h3>Participe da pesquisa</h3>
-            <p>
-              O formulário amplia a base de dados do projeto e fortalece o diagnóstico sobre inovação, empreendedorismo e permanência acadêmica na UFMT.
-            </p>
+            <p>O formulário amplia a base de dados do projeto e fortalece o diagnóstico sobre inovação, empreendedorismo e permanência acadêmica na UFMT.</p>
             <a class="btn btn-primary" id="formButton" href="#" target="_blank" rel="noopener noreferrer">Abrir formulário</a>
           </article>
           <article class="card">
@@ -849,9 +950,7 @@
 
         <div class="card">
           <h3>Guia Interativo: Diagnóstico de Barreiras à Inovação na UFMT</h3>
-          <p>
-            Este espaço dá acesso ao ambiente do NotebookLM, permitindo leitura ampliada, navegação por tópicos e exploração dos materiais do projeto.
-          </p>
+          <p>Este espaço dá acesso ao ambiente do NotebookLM, permitindo leitura ampliada, navegação por tópicos e exploração dos materiais do projeto.</p>
           <a class="btn btn-primary" id="guideButton" href="#" target="_blank" rel="noopener noreferrer">Abrir guia interativo</a>
         </div>
       </div>
@@ -867,12 +966,12 @@
         </div>
 
         <div class="timeline">
-          <div class="timeline-item"><h3>1. Surgimento da ideia</h3><p>Identificação da necessidade de diagnosticar barreiras empreendedoras na UFMT.</p></div>
-          <div class="timeline-item"><h3>2. Elaboração da pesquisa</h3><p>Definição do questionário, objetivos e estratégias de divulgação.</p></div>
-          <div class="timeline-item"><h3>3. Coleta das respostas</h3><p>Mobilização da comunidade acadêmica por canais digitais e institucionais.</p></div>
-          <div class="timeline-item"><h3>4. Limpeza e análise</h3><p>Tratamento dos dados com Python e interpretação dos resultados.</p></div>
-          <div class="timeline-item"><h3>5. Socialização</h3><p>Produção do dashboard, do guia interativo e do site do projeto.</p></div>
-          <div class="timeline-item"><h3>6. Continuidade</h3><p>Proposta de atualização periódica do REA como termômetro da inovação na instituição.</p></div>
+          <div class="timeline-item"><h3>2024 — Surgimento da ideia</h3><p>Identificação da necessidade de analisar barreiras empreendedoras dentro da UFMT.</p></div>
+          <div class="timeline-item"><h3>2025 — Elaboração da pesquisa</h3><p>Construção do instrumento de pesquisa, definição da metodologia e estruturação do projeto.</p></div>
+          <div class="timeline-item"><h3>2025 — Limpeza e análise</h3><p>Organização e tratamento dos dados com Python e Google Colab.</p></div>
+          <div class="timeline-item"><h3>2025 — Socialização</h3><p>Apresentação inicial dos resultados e desenvolvimento do guia interativo.</p></div>
+          <div class="timeline-item"><h3>2026 — Coleta das respostas</h3><p>Aplicação do questionário e consolidação das respostas da comunidade acadêmica.</p></div>
+          <div class="timeline-item"><h3>2026 — Continuidade</h3><p>Proposta de atualização anual do REA como termômetro da inovação na UFMT.</p></div>
         </div>
       </div>
     </section>
@@ -882,11 +981,11 @@
         <div class="section-head">
           <h2>Equipe</h2>
           <p>
-            Abaixo está a equipe real do projeto, com estrutura pronta para adicionar fotos e funções específicas depois.
+            O projeto foi construído coletivamente por estudantes comprometidos com inovação, pesquisa e impacto acadêmico.
           </p>
         </div>
 
-        <div class="grid-3" id="teamGrid"></div>
+        <div class="team-grid" id="teamGrid"></div>
       </div>
     </section>
 
@@ -910,9 +1009,7 @@
           </article>
           <article class="card">
             <h3>Valor do projeto</h3>
-            <p>
-              O REA já funciona como um diagnóstico inicial robusto, com capacidade de orientar novas ações, aperfeiçoar a coleta futura e fortalecer a cultura de inovação com base em evidências.
-            </p>
+            <p>O REA já funciona como um diagnóstico inicial robusto, com capacidade de orientar novas ações, aperfeiçoar a coleta futura e fortalecer a cultura de inovação com base em evidências.</p>
           </article>
         </div>
       </div>
@@ -967,18 +1064,12 @@
   </footer>
 
   <script>
-    // =========================
-    // CONFIGURE SEUS LINKS AQUI
-    // =========================
     const CONFIG = {
-      formulario: 'https://forms.google.com',
-      dashboard: 'https://lookerstudio.google.com/',
+      formulario: 'https://docs.google.com/forms/d/e/SEU_FORMULARIO/viewform?embedded=true',
+      dashboard: 'https://lookerstudio.google.com/embed/reporting/SEU_DASHBOARD/page/p_xxxxxxxx',
       guia: 'https://notebooklm.google.com/notebook/e0e0263e-0928-48b9-ba12-c148d3c10782'
     };
 
-    // =========================
-    // DADOS DO SITE
-    // =========================
     const barriers = [
       { label: 'Dinheiro: falta de investimento inicial', value: 32 },
       { label: 'Tempo: graduação e trabalho consomem tudo', value: 18 },
@@ -998,22 +1089,16 @@
       'Osmar de Jesus Fernandes Martini'
     ];
 
-    // =========================
-    // LINKS DINÂMICOS
-    // =========================
     const formButton = document.getElementById('formButton');
     const formFrame = document.getElementById('formFrame');
     const dashboardFrame = document.getElementById('dashboardFrame');
     const guideButton = document.getElementById('guideButton');
 
-    if (formButton) formButton.href = CONFIG.formulario;
+    if (formButton) formButton.href = CONFIG.formulario.replace('?embedded=true', '');
     if (formFrame) formFrame.src = CONFIG.formulario;
     if (dashboardFrame) dashboardFrame.src = CONFIG.dashboard;
     if (guideButton) guideButton.href = CONFIG.guia;
 
-    // =========================
-    // RENDER DAS BARREIRAS
-    // =========================
     const barrierList = document.getElementById('barrierList');
     const maxBarrier = Math.max(...barriers.map(item => item.value));
 
@@ -1035,29 +1120,29 @@
       });
     }
 
-    // =========================
-    // RENDER DA EQUIPE
-    // =========================
     const teamGrid = document.getElementById('teamGrid');
 
     if (teamGrid) {
-      team.forEach((name, index) => {
+      team.forEach(name => {
+        const initials = name
+          .split(' ')
+          .filter(word => word.length > 2)
+          .slice(0, 2)
+          .map(word => word[0])
+          .join('')
+          .toUpperCase();
+
         const card = document.createElement('article');
-        card.className = 'card team-card';
+        card.className = 'team-card';
         card.innerHTML = `
+          <div class="team-avatar">${initials}</div>
           <h3>${name}</h3>
           <div class="team-role">Integrante do projeto</div>
-          <p>
-            Espaço pronto para adicionar foto, função específica e breve descrição do integrante ${index + 1}.
-          </p>
         `;
         teamGrid.appendChild(card);
       });
     }
 
-    // =========================
-    // ANIMAÇÃO DE ENTRADA
-    // =========================
     const reveals = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -1069,9 +1154,6 @@
 
     reveals.forEach(item => observer.observe(item));
 
-    // =========================
-    // LINK ATIVO NO MENU
-    // =========================
     const sections = document.querySelectorAll('main section[id]');
     const menuLinks = document.querySelectorAll('#menu a');
 
@@ -1095,4 +1177,6 @@
   </script>
 </body>
 </html>
+
+
 
