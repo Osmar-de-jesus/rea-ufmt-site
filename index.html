@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>REA UFMT | Diagnóstico de Barreiras Empreendedoras</title>
-  <meta name="description" content="Projeto REA UFMT: diagnóstico de barreiras empreendedoras, guia interativo, questionário e dashboard com base em dados." />
+  <meta name="description" content="Projeto REA UFMT: diagnóstico de barreiras empreendedoras, formulário, dashboard e guia interativo com base em dados." />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
       --bg: #f2f6fb;
@@ -53,6 +54,7 @@
 
     a { color: inherit; text-decoration: none; }
     img { max-width: 100%; display: block; }
+    canvas { width: 100% !important; height: auto !important; }
 
     .container {
       width: min(calc(100% - 32px), var(--max-width));
@@ -95,10 +97,7 @@
       border: 1px solid rgba(11,45,97,0.08);
     }
 
-    .brand-title {
-      line-height: 1.1;
-    }
-
+    .brand-title { line-height: 1.1; }
     .brand-title small {
       display: block;
       color: var(--muted);
@@ -154,7 +153,6 @@
     }
 
     .btn:hover { transform: translateY(-3px); }
-
     .btn-primary {
       background: linear-gradient(135deg, var(--primary), var(--primary-2));
       color: #fff;
@@ -247,7 +245,10 @@
     .metric,
     .barrier,
     .timeline-item,
-    .team-card {
+    .team-card,
+    .chart-card,
+    .note-box,
+    .quick-card {
       background: var(--surface);
       border: 1px solid var(--border);
       box-shadow: var(--shadow-soft);
@@ -304,13 +305,9 @@
       margin-bottom: 6px;
     }
 
-    section {
-      padding: 38px 0;
-    }
+    section { padding: 38px 0; }
 
-    .section-head {
-      margin-bottom: 24px;
-    }
+    .section-head { margin-bottom: 24px; }
 
     .section-head h2 {
       margin: 0 0 10px;
@@ -342,19 +339,21 @@
     }
 
     .card:hover,
-    .team-card:hover {
+    .team-card:hover,
+    .chart-card:hover,
+    .quick-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 24px 48px rgba(11,45,97,0.12);
       border-color: rgba(23,79,150,0.18);
     }
 
-    .card h3 {
+    .card h3, .chart-card h3, .quick-card h3 {
       margin: 0 0 10px;
       color: var(--primary);
       font-size: 1.08rem;
     }
 
-    .card p, .card li {
+    .card p, .card li, .chart-card p, .quick-card p {
       color: var(--muted);
       line-height: 1.74;
     }
@@ -474,17 +473,8 @@
       box-shadow: 0 0 0 2px rgba(11,45,97,0.10);
     }
 
-    .timeline-item h3 {
-      margin: 0 0 8px;
-      color: var(--primary);
-      font-size: 1.06rem;
-    }
-
-    .timeline-item p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.72;
-    }
+    .timeline-item h3 { margin: 0 0 8px; color: var(--primary); font-size: 1.06rem; }
+    .timeline-item p { margin: 0; color: var(--muted); line-height: 1.72; }
 
     .embed-box {
       width: 100%;
@@ -510,11 +500,19 @@
 
     iframe {
       width: 100%;
-      min-height: 590px;
+      min-height: 640px;
       border: 0;
       background: #fff;
       position: relative;
       z-index: 0;
+    }
+
+    .note-box {
+      padding: 18px 20px;
+      border-radius: 18px;
+      margin-top: 16px;
+      color: var(--muted);
+      line-height: 1.7;
     }
 
     .team-grid {
@@ -569,6 +567,59 @@
       font-weight: 800;
     }
 
+    .dashboard-top {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .quick-card {
+      border-radius: 22px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quick-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent), var(--accent-2));
+    }
+
+    .quick-card strong {
+      display: block;
+      font-size: 1.9rem;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .chart-card {
+      border-radius: 24px;
+      padding: 22px;
+      min-height: 360px;
+    }
+
+    .chart-wrap {
+      position: relative;
+      min-height: 280px;
+    }
+
+    .status-line {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
     .quote-box {
       background: linear-gradient(135deg, var(--primary), #133f79);
       color: #fff;
@@ -590,17 +641,8 @@
       background: radial-gradient(circle, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0) 70%);
     }
 
-    .quote-box h2, .quote-box p {
-      color: #fff;
-      position: relative;
-      z-index: 1;
-    }
-
-    .quote-box p {
-      opacity: 0.95;
-      line-height: 1.82;
-      max-width: 860px;
-    }
+    .quote-box h2, .quote-box p { color: #fff; position: relative; z-index: 1; }
+    .quote-box p { opacity: 0.95; line-height: 1.82; max-width: 860px; }
 
     footer {
       padding: 28px 0 50px;
@@ -632,7 +674,9 @@
       .hero-grid,
       .grid-4,
       .team-grid,
-      .metric-grid {
+      .metric-grid,
+      .dashboard-top,
+      .chart-grid {
         grid-template-columns: 1fr 1fr;
       }
     }
@@ -650,17 +694,16 @@
       .grid-4,
       .metric-grid,
       .stats,
-      .team-grid {
+      .team-grid,
+      .dashboard-top,
+      .chart-grid {
         grid-template-columns: 1fr;
       }
 
-      .hero {
-        padding-top: 58px;
-      }
-
+      .hero { padding-top: 58px; }
       h1 { font-size: 2.45rem; }
       .quote-box { padding: 28px; }
-      iframe { min-height: 520px; }
+      iframe { min-height: 560px; }
     }
   </style>
 </head>
@@ -710,10 +753,10 @@
             O projeto usa formulário online, ciência de dados, análise em Python e visualizações interativas para mapear barreiras, apoiar decisões e aproximar os estudantes do ecossistema de inovação.
           </p>
           <div class="stats">
-            <div class="stat"><strong>92</strong><span>estudantes participantes</span></div>
-            <div class="stat"><strong>65,2%</strong><span>nunca ouviram falar do EIT</span></div>
-            <div class="stat"><strong>72,8%</strong><span>presencial</span></div>
-            <div class="stat"><strong>27,2%</strong><span>EaD</span></div>
+            <div class="stat"><strong id="heroTotal">--</strong><span>respostas registradas</span></div>
+            <div class="stat"><strong id="heroUnknownEit">--</strong><span>não conhecem o EIT</span></div>
+            <div class="stat"><strong id="heroPresencial">--</strong><span>presencial</span></div>
+            <div class="stat"><strong id="heroEad">--</strong><span>EaD</span></div>
           </div>
         </div>
       </div>
@@ -805,10 +848,10 @@
         </div>
 
         <div class="grid-4">
-          <article class="card"><span class="pill">Etapa 1</span><h3>Coleta</h3><p>Aplicação do questionário online com participação de 92 estudantes da UFMT.</p></article>
-          <article class="card"><span class="pill">Etapa 2</span><h3>Limpeza dos dados</h3><p>Uso de Python no Google Colab para remover erros, organizar respostas e padronizar informações.</p></article>
-          <article class="card"><span class="pill">Etapa 3</span><h3>Análise exploratória</h3><p>Identificação das principais barreiras, médias, padrões e insights relevantes para o diagnóstico.</p></article>
-          <article class="card"><span class="pill">Etapa 4</span><h3>Socialização</h3><p>Criação do dashboard, do site e do guia interativo para ampliar o acesso aos resultados.</p></article>
+          <article class="card"><span class="pill">Etapa 1</span><h3>Coleta</h3><p>Aplicação do questionário online com participação aberta dos estudantes da UFMT.</p></article>
+          <article class="card"><span class="pill">Etapa 2</span><h3>Banco de respostas</h3><p>As respostas ficam guardadas no Google Forms e podem ser vinculadas a uma planilha do Google Sheets.</p></article>
+          <article class="card"><span class="pill">Etapa 3</span><h3>Leitura automática</h3><p>O dashboard do site lê os dados publicados da planilha e transforma tudo em gráficos interativos.</p></article>
+          <article class="card"><span class="pill">Etapa 4</span><h3>Socialização</h3><p>Site, dashboard e guia interativo apresentam os resultados de forma pública e visual.</p></article>
         </div>
       </div>
     </section>
@@ -818,15 +861,15 @@
         <div class="section-head">
           <h2>Quem participou</h2>
           <p>
-            A pesquisa alcançou estudantes de diferentes áreas, com predominância do ensino presencial, mas também com presença importante do EaD.
+            Conforme novas respostas entram, os cartões abaixo podem ser atualizados automaticamente pelo dashboard conectado ao banco de dados.
           </p>
         </div>
 
         <div class="metric-grid">
-          <div class="metric"><strong>92</strong><span>respondentes</span></div>
-          <div class="metric"><strong>72,8%</strong><span>ensino presencial</span></div>
-          <div class="metric"><strong>27,2%</strong><span>ensino EaD</span></div>
-          <div class="metric"><strong>6,27</strong><span>preparo percebido</span></div>
+          <div class="metric"><strong id="metricTotal">--</strong><span>respondentes</span></div>
+          <div class="metric"><strong id="metricPresencial">--</strong><span>ensino presencial</span></div>
+          <div class="metric"><strong id="metricEad">--</strong><span>ensino EaD</span></div>
+          <div class="metric"><strong id="metricPreparo">--</strong><span>média de preparo</span></div>
         </div>
       </div>
     </section>
@@ -844,17 +887,16 @@
           <article class="card">
             <h3>Termômetro da inovação e informação</h3>
             <ul>
-              <li><strong>65,2%</strong> dos alunos nunca ouviram falar do EIT.</li>
-              <li><strong>14,1%</strong> conhecem e entendem as estruturas de apoio à inovação.</li>
-              <li><strong>18,5%</strong> já ouviram falar, mas não compreendem.</li>
-              <li><strong>1,09%</strong> conhecem o EIT via Profnit.</li>
+              <li><strong id="eitUnknownText">--</strong> nunca ouviram falar do EIT.</li>
+              <li><strong id="eitKnownText">--</strong> conhecem e entendem as estruturas de apoio à inovação.</li>
+              <li><strong id="eitHeardText">--</strong> já ouviram falar, mas não compreendem.</li>
             </ul>
           </article>
           <article class="card">
             <h3>Médias de preparo e intenção</h3>
             <ul>
-              <li><strong>6,27/10</strong> de preparo percebido.</li>
-              <li><strong>6,20/10</strong> de intenção de empreender.</li>
+              <li><strong id="preparoText">--</strong> de preparo percebido.</li>
+              <li><strong id="empreenderText">--</strong> de intenção de empreender.</li>
               <li>Há forte demanda por orientação prática e por um guia digital passo a passo.</li>
             </ul>
           </article>
@@ -867,7 +909,7 @@
         <div class="section-head">
           <h2>Ranking das barreiras empreendedoras</h2>
           <p>
-            O diagnóstico identificou um conjunto claro de obstáculos à inovação. Abaixo está a visualização já pronta para o site.
+            A visualização abaixo é atualizada com base nas respostas registradas no banco de dados da pesquisa.
           </p>
         </div>
 
@@ -902,22 +944,17 @@
         <div class="section-head">
           <h2>Questionário</h2>
           <p>
-            Sua resposta ajuda a transformar a universidade. Esta área já está pronta para abrir o formulário em nova aba e também incorporar o conteúdo por iframe.
+            O formulário abaixo já está ligado ao Google Forms público da pesquisa. Ele funciona como porta de entrada para o banco de dados da pesquisa.
           </p>
         </div>
 
-        <div class="grid-2">
-          <article class="card">
-            <h3>Participe da pesquisa</h3>
-            <p>O formulário amplia a base de dados do projeto e fortalece o diagnóstico sobre inovação, empreendedorismo e permanência acadêmica na UFMT.</p>
-            <a class="btn btn-primary" id="formButton" href="#" target="_blank" rel="noopener noreferrer">Abrir formulário</a>
-          </article>
-          <article class="card">
-            <h3>Formulário incorporado</h3>
-            <div class="embed-box">
-              <iframe id="formFrame" src="about:blank" title="Formulário do projeto"></iframe>
-            </div>
-          </article>
+        <div class="card">
+          <div class="embed-box">
+            <iframe id="formFrame" src="https://docs.google.com/forms/d/e/1FAIpQLSebwGCVSWrCfOosVJ58doCx5Gf0qtTyPv1QSMD6mxScfwYPcw/viewform?embedded=true" title="Formulário da pesquisa"></iframe>
+          </div>
+          <div class="note-box">
+            <strong>Importante:</strong> para o dashboard atualizar sozinho, você ainda precisa vincular esse Google Forms a uma planilha do Google Sheets e publicar a aba de respostas na web. Sem isso, o formulário funciona, mas o dashboard não consegue ler as respostas em tempo real.
+          </div>
         </div>
       </div>
     </section>
@@ -925,16 +962,41 @@
     <section id="dashboard">
       <div class="container reveal">
         <div class="section-head">
-          <h2>Dashboard</h2>
+          <h2>Dashboard interativo</h2>
           <p>
-            Esta seção está preparada para Power BI, Looker Studio ou outro painel web com métricas, filtros, gráficos e indicadores públicos do projeto.
+            Este painel foi preparado para ler as respostas do formulário e transformar os dados em métricas e gráficos interativos dentro do próprio site.
           </p>
         </div>
 
-        <div class="card">
-          <div class="embed-box">
-            <iframe id="dashboardFrame" src="about:blank" title="Dashboard do projeto"></iframe>
-          </div>
+        <div class="dashboard-top">
+          <article class="quick-card"><h3>Total de respostas</h3><strong id="dashTotal">--</strong><p>Quantidade total de formulários enviados.</p></article>
+          <article class="quick-card"><h3>Não conhecem o EIT</h3><strong id="dashEitUnknown">--</strong><p>Percentual dos que responderam “nunca ouvi falar”.</p></article>
+          <article class="quick-card"><h3>Presencial</h3><strong id="dashPresencial">--</strong><p>Participação dos estudantes presenciais.</p></article>
+          <article class="quick-card"><h3>Intenção empreendedora</h3><strong id="dashEmpreender">--</strong><p>Média da nota de intenção de empreender.</p></article>
+        </div>
+
+        <div class="chart-grid">
+          <article class="chart-card">
+            <h3>Modalidade de ensino</h3>
+            <div class="chart-wrap"><canvas id="modalityChart"></canvas></div>
+          </article>
+          <article class="chart-card">
+            <h3>Conhecimento sobre o EIT</h3>
+            <div class="chart-wrap"><canvas id="eitChart"></canvas></div>
+          </article>
+          <article class="chart-card">
+            <h3>Principais barreiras</h3>
+            <div class="chart-wrap"><canvas id="barrierChart"></canvas></div>
+          </article>
+          <article class="chart-card">
+            <h3>Médias da pesquisa</h3>
+            <div class="chart-wrap"><canvas id="scoreChart"></canvas></div>
+          </article>
+        </div>
+
+        <p class="status-line" id="dashboardStatus">Aguardando leitura da base de dados.</p>
+        <div class="note-box">
+          <strong>Para o dashboard funcionar de verdade:</strong> vincule o Google Forms a uma planilha do Google Sheets, publique a aba de respostas na web em formato CSV e cole esse link na variável <code>SHEET_CSV_URL</code> do código. Sem essa etapa, o site não consegue ler os dados automaticamente.
         </div>
       </div>
     </section>
@@ -951,7 +1013,7 @@
         <div class="card">
           <h3>Guia Interativo: Diagnóstico de Barreiras à Inovação na UFMT</h3>
           <p>Este espaço dá acesso ao ambiente do NotebookLM, permitindo leitura ampliada, navegação por tópicos e exploração dos materiais do projeto.</p>
-          <a class="btn btn-primary" id="guideButton" href="#" target="_blank" rel="noopener noreferrer">Abrir guia interativo</a>
+          <a class="btn btn-primary" id="guideButton" href="https://notebooklm.google.com/notebook/e0e0263e-0928-48b9-ba12-c148d3c10782" target="_blank" rel="noopener noreferrer">Abrir guia interativo</a>
         </div>
       </div>
     </section>
@@ -1002,9 +1064,9 @@
           <article class="card">
             <h3>Leitura crítica do estudo</h3>
             <ul>
-              <li>92 respostas ainda são poucas diante do tamanho da UFMT.</li>
-              <li>Perguntas fechadas podem ter limitado parte das opiniões dos alunos.</li>
-              <li>Mesmo assim, os dados trouxeram insights fortes e relevantes.</li>
+              <li>Conforme a base cresce, os resultados ficam mais representativos.</li>
+              <li>Perguntas fechadas podem limitar parte das opiniões dos alunos.</li>
+              <li>Mesmo assim, os dados trazem insights fortes e relevantes.</li>
             </ul>
           </article>
           <article class="card">
@@ -1058,27 +1120,65 @@
         Seminário Integrador VI • REA – Diagnóstico de Barreiras Empreendedoras
       </div>
       <div>
-        Estrutura pronta para GitHub Pages. Edite os links do formulário e do dashboard antes de publicar.
+        Site pronto para GitHub Pages. Para ativar o dashboard ao vivo, conecte o Forms ao Sheets e publique a aba de respostas na web.
       </div>
     </div>
   </footer>
 
   <script>
-    const CONFIG = {
-      formulario: 'https://docs.google.com/forms/d/e/SEU_FORMULARIO/viewform?embedded=true',
-      dashboard: 'https://lookerstudio.google.com/embed/reporting/SEU_DASHBOARD/page/p_xxxxxxxx',
-      guia: 'https://notebooklm.google.com/notebook/e0e0263e-0928-48b9-ba12-c148d3c10782'
-    };
+    // =========================
+    // CONFIGURAÇÕES PRINCIPAIS
+    // =========================
+    const FORM_PUBLIC_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSebwGCVSWrCfOosVJ58doCx5Gf0qtTyPv1QSMD6mxScfwYPcw/viewform?embedded=true';
 
-    const barriers = [
-      { label: 'Dinheiro: falta de investimento inicial', value: 32 },
-      { label: 'Tempo: graduação e trabalho consomem tudo', value: 18 },
-      { label: 'Burocracia: medo da complexidade para formalizar', value: 13 },
-      { label: 'Desinformação: não saber o que a UFMT oferece', value: 13 },
-      { label: 'Conhecimento: falta de gestão de negócio', value: 9 },
-      { label: 'Distância/Acesso: dificuldade especialmente para o EaD', value: 3 }
+    // COLE AQUI O LINK CSV DA ABA DE RESPOSTAS DO GOOGLE SHEETS.
+    // Exemplo:
+    // https://docs.google.com/spreadsheets/d/e/2PACX-XXXXX/pub?gid=0&single=true&output=csv
+    const SHEET_CSV_URL = '';
+
+    const GUIDE_URL = 'https://notebooklm.google.com/notebook/e0e0263e-0928-48b9-ba12-c148d3c10782';
+
+    const FALLBACK_DATA = [
+      {
+        modalidade: 'Presencial',
+        eit: 'Nunca ouvi falar',
+        preparo: 6,
+        empreender: 7,
+        barreira: 'Falta de investimento inicial'
+      },
+      {
+        modalidade: 'EaD',
+        eit: 'Já ouvi falar, mas não compreendo',
+        preparo: 5,
+        empreender: 6,
+        barreira: 'Distância/Acesso'
+      },
+      {
+        modalidade: 'Presencial',
+        eit: 'Conheço e entendo',
+        preparo: 8,
+        empreender: 8,
+        barreira: 'Falta de tempo'
+      },
+      {
+        modalidade: 'Presencial',
+        eit: 'Nunca ouvi falar',
+        preparo: 6,
+        empreender: 6,
+        barreira: 'Desinformação'
+      },
+      {
+        modalidade: 'EaD',
+        eit: 'Nunca ouvi falar',
+        preparo: 4,
+        empreender: 5,
+        barreira: 'Distância/Acesso'
+      }
     ];
 
+    // =========================
+    // EQUIPE
+    // =========================
     const team = [
       'Adriano Rodrigues da Silva',
       'Caroline dos Anjos Vaez',
@@ -1089,39 +1189,7 @@
       'Osmar de Jesus Fernandes Martini'
     ];
 
-    const formButton = document.getElementById('formButton');
-    const formFrame = document.getElementById('formFrame');
-    const dashboardFrame = document.getElementById('dashboardFrame');
-    const guideButton = document.getElementById('guideButton');
-
-    if (formButton) formButton.href = CONFIG.formulario.replace('?embedded=true', '');
-    if (formFrame) formFrame.src = CONFIG.formulario;
-    if (dashboardFrame) dashboardFrame.src = CONFIG.dashboard;
-    if (guideButton) guideButton.href = CONFIG.guia;
-
-    const barrierList = document.getElementById('barrierList');
-    const maxBarrier = Math.max(...barriers.map(item => item.value));
-
-    if (barrierList) {
-      barriers.forEach(item => {
-        const percent = (item.value / maxBarrier) * 100;
-        const div = document.createElement('div');
-        div.className = 'barrier';
-        div.innerHTML = `
-          <div class="barrier-top">
-            <span>${item.label}</span>
-            <span>${item.value}</span>
-          </div>
-          <div class="progress">
-            <span style="width:${percent}%"></span>
-          </div>
-        `;
-        barrierList.appendChild(div);
-      });
-    }
-
     const teamGrid = document.getElementById('teamGrid');
-
     if (teamGrid) {
       team.forEach(name => {
         const initials = name
@@ -1143,6 +1211,9 @@
       });
     }
 
+    // =========================
+    // ANIMAÇÃO DE ENTRADA
+    // =========================
     const reveals = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -1151,9 +1222,11 @@
         }
       });
     }, { threshold: 0.15 });
-
     reveals.forEach(item => observer.observe(item));
 
+    // =========================
+    // MENU ATIVO
+    // =========================
     const sections = document.querySelectorAll('main section[id]');
     const menuLinks = document.querySelectorAll('#menu a');
 
@@ -1174,9 +1247,255 @@
         }
       });
     });
+
+    // =========================
+    // DASHBOARD
+    // =========================
+    let modalityChartInstance;
+    let eitChartInstance;
+    let barrierChartInstance;
+    let scoreChartInstance;
+
+    function parseCSV(csvText) {
+      const rows = csvText.trim().split(/
+?
+/).map(row => {
+        const result = [];
+        let current = '';
+        let insideQuotes = false;
+
+        for (let i = 0; i < row.length; i++) {
+          const char = row[i];
+          const next = row[i + 1];
+
+          if (char === '"') {
+            if (insideQuotes && next === '"') {
+              current += '"';
+              i++;
+            } else {
+              insideQuotes = !insideQuotes;
+            }
+          } else if (char === ',' && !insideQuotes) {
+            result.push(current);
+            current = '';
+          } else {
+            current += char;
+          }
+        }
+
+        result.push(current);
+        return result;
+      });
+
+      const headers = rows[0].map(h => h.trim());
+      return rows.slice(1).map(row => {
+        const obj = {};
+        headers.forEach((header, index) => {
+          obj[header] = (row[index] || '').trim();
+        });
+        return obj;
+      });
+    }
+
+    function normalizeData(rawRows) {
+      return rawRows.map(row => {
+        const values = Object.values(row);
+
+        return {
+          modalidade: row['Modalidade'] || row['modalidade'] || values[1] || '',
+          eit: row['Conhece o EIT?'] || row['EIT'] || row['eit'] || values[2] || '',
+          preparo: Number((row['Preparo'] || row['preparo'] || values[3] || '').toString().replace(',', '.')) || 0,
+          empreender: Number((row['Intenção de empreender'] || row['empreender'] || values[4] || '').toString().replace(',', '.')) || 0,
+          barreira: row['Principal barreira'] || row['barreira'] || values[5] || ''
+        };
+      }).filter(item => item.modalidade || item.eit || item.barreira);
+    }
+
+    function percentage(part, total) {
+      if (!total) return '0%';
+      return `${((part / total) * 100).toFixed(1).replace('.', ',')}%`;
+    }
+
+    function average(list) {
+      if (!list.length) return 0;
+      return list.reduce((sum, value) => sum + value, 0) / list.length;
+    }
+
+    function countBy(list, key) {
+      return list.reduce((acc, item) => {
+        const value = item[key] || 'Não informado';
+        acc[value] = (acc[value] || 0) + 1;
+        return acc;
+      }, {});
+    }
+
+    function renderBarrierList(barriersCount) {
+      const barrierList = document.getElementById('barrierList');
+      if (!barrierList) return;
+      barrierList.innerHTML = '';
+
+      const entries = Object.entries(barriersCount).sort((a, b) => b[1] - a[1]);
+      const maxValue = entries.length ? entries[0][1] : 1;
+
+      entries.forEach(([label, value]) => {
+        const percent = (value / maxValue) * 100;
+        const div = document.createElement('div');
+        div.className = 'barrier';
+        div.innerHTML = `
+          <div class="barrier-top">
+            <span>${label}</span>
+            <span>${value}</span>
+          </div>
+          <div class="progress"><span style="width:${percent}%"></span></div>
+        `;
+        barrierList.appendChild(div);
+      });
+    }
+
+    function updateSummaryCards(data) {
+      const total = data.length;
+      const modalities = countBy(data, 'modalidade');
+      const eit = countBy(data, 'eit');
+      const avgPreparo = average(data.map(item => item.preparo).filter(Boolean));
+      const avgEmpreender = average(data.map(item => item.empreender).filter(Boolean));
+
+      const unknownEit = eit['Nunca ouvi falar'] || eit['Não conheço'] || 0;
+      const heardOnly = eit['Já ouvi falar, mas não compreendo'] || eit['Já ouvi falar'] || 0;
+      const knowWell = eit['Conheço e entendo'] || eit['Conheço bem'] || 0;
+      const presencial = modalities['Presencial'] || 0;
+      const ead = modalities['EaD'] || 0;
+
+      document.getElementById('heroTotal').textContent = total || '--';
+      document.getElementById('heroUnknownEit').textContent = percentage(unknownEit, total);
+      document.getElementById('heroPresencial').textContent = percentage(presencial, total);
+      document.getElementById('heroEad').textContent = percentage(ead, total);
+
+      document.getElementById('metricTotal').textContent = total || '--';
+      document.getElementById('metricPresencial').textContent = percentage(presencial, total);
+      document.getElementById('metricEad').textContent = percentage(ead, total);
+      document.getElementById('metricPreparo').textContent = avgPreparo ? avgPreparo.toFixed(2).replace('.', ',') : '--';
+
+      document.getElementById('eitUnknownText').textContent = percentage(unknownEit, total);
+      document.getElementById('eitKnownText').textContent = percentage(knowWell, total);
+      document.getElementById('eitHeardText').textContent = percentage(heardOnly, total);
+      document.getElementById('preparoText').textContent = avgPreparo ? avgPreparo.toFixed(2).replace('.', ',') + '/10' : '--';
+      document.getElementById('empreenderText').textContent = avgEmpreender ? avgEmpreender.toFixed(2).replace('.', ',') + '/10' : '--';
+
+      document.getElementById('dashTotal').textContent = total || '--';
+      document.getElementById('dashEitUnknown').textContent = percentage(unknownEit, total);
+      document.getElementById('dashPresencial').textContent = percentage(presencial, total);
+      document.getElementById('dashEmpreender').textContent = avgEmpreender ? avgEmpreender.toFixed(2).replace('.', ',') : '--';
+    }
+
+    function destroyChart(instance) {
+      if (instance) instance.destroy();
+    }
+
+    function renderCharts(data) {
+      const modalities = countBy(data, 'modalidade');
+      const eit = countBy(data, 'eit');
+      const barriers = countBy(data, 'barreira');
+      const avgPreparo = average(data.map(item => item.preparo).filter(Boolean));
+      const avgEmpreender = average(data.map(item => item.empreender).filter(Boolean));
+
+      renderBarrierList(barriers);
+
+      destroyChart(modalityChartInstance);
+      destroyChart(eitChartInstance);
+      destroyChart(barrierChartInstance);
+      destroyChart(scoreChartInstance);
+
+      modalityChartInstance = new Chart(document.getElementById('modalityChart'), {
+        type: 'doughnut',
+        data: {
+          labels: Object.keys(modalities),
+          datasets: [{ data: Object.values(modalities) }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { position: 'bottom' } }
+        }
+      });
+
+      eitChartInstance = new Chart(document.getElementById('eitChart'), {
+        type: 'bar',
+        data: {
+          labels: Object.keys(eit),
+          datasets: [{ data: Object.values(eit) }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+
+      barrierChartInstance = new Chart(document.getElementById('barrierChart'), {
+        type: 'bar',
+        data: {
+          labels: Object.keys(barriers),
+          datasets: [{ data: Object.values(barriers) }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: { x: { beginAtZero: true } }
+        }
+      });
+
+      scoreChartInstance = new Chart(document.getElementById('scoreChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Preparo percebido', 'Intenção de empreender'],
+          datasets: [{ data: [avgPreparo || 0, avgEmpreender || 0] }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, max: 10 } }
+        }
+      });
+    }
+
+    async function loadDashboardData() {
+      const status = document.getElementById('dashboardStatus');
+
+      if (!SHEET_CSV_URL) {
+        status.textContent = 'Dashboard em modo de demonstração. Cole o link CSV publicado do Google Sheets para ativar a atualização automática.';
+        updateSummaryCards(FALLBACK_DATA);
+        renderCharts(FALLBACK_DATA);
+        return;
+      }
+
+      try {
+        status.textContent = 'Lendo respostas do banco de dados...';
+        const response = await fetch(SHEET_CSV_URL, { cache: 'no-store' });
+        const csvText = await response.text();
+        const parsed = parseCSV(csvText);
+        const normalized = normalizeData(parsed);
+
+        if (!normalized.length) {
+          throw new Error('Sem linhas válidas na planilha publicada.');
+        }
+
+        updateSummaryCards(normalized);
+        renderCharts(normalized);
+        status.textContent = `Dashboard atualizado com ${normalized.length} respostas.`;
+      } catch (error) {
+        console.error(error);
+        status.textContent = 'Não foi possível ler a planilha publicada. O painel ficou em modo de demonstração até você corrigir o link CSV.';
+        updateSummaryCards(FALLBACK_DATA);
+        renderCharts(FALLBACK_DATA);
+      }
+    }
+
+    loadDashboardData();
   </script>
 </body>
 </html>
+
+
 
 
 
