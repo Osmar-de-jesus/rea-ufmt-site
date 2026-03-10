@@ -1,1 +1,1098 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>REA UFMT | Diagnóstico de Barreiras Empreendedoras</title>
+  <meta name="description" content="Projeto REA UFMT: diagnóstico de barreiras empreendedoras, guia interativo, questionário e dashboard com base em dados." />
+  <style>
+    :root {
+      --bg: #f3f7fc;
+      --surface: #ffffff;
+      --surface-soft: #f8fbff;
+      --primary: #0d2f5f;
+      --primary-2: #15529a;
+      --accent: #d8a437;
+      --accent-2: #2fb7c9;
+      --text: #1d2734;
+      --muted: #5f6d7d;
+      --border: rgba(13, 47, 95, 0.12);
+      --shadow: 0 18px 50px rgba(13, 47, 95, 0.12);
+      --radius: 22px;
+      --radius-sm: 16px;
+      --max-width: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(47,183,201,0.12), transparent 26%),
+        radial-gradient(circle at top left, rgba(216,164,55,0.10), transparent 22%),
+        linear-gradient(180deg, #f8fbff 0%, #eef5fd 100%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .container {
+      width: min(calc(100% - 32px), var(--max-width));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(13, 47, 95, 0.08);
+    }
+
+    .nav {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .brand-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: #fff;
+      box-shadow: var(--shadow);
+      font-weight: 900;
+    }
+
+    .brand small {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .menu {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .menu a {
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: 0.25s ease;
+    }
+
+    .menu a:hover,
+    .menu a.active { color: var(--primary); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      border: 0;
+      border-radius: 999px;
+      padding: 0 20px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: #fff;
+      box-shadow: 0 16px 30px rgba(21, 82, 154, 0.26);
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: var(--primary);
+      border: 1px solid rgba(13, 47, 95, 0.15);
+    }
+
+    .hero {
+      padding: 84px 0 46px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: rgba(21, 82, 154, 0.08);
+      border: 1px solid rgba(21, 82, 154, 0.12);
+      color: var(--primary);
+      font-size: 0.84rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      line-height: 1.04;
+      font-size: clamp(2.2rem, 5vw, 4.4rem);
+      color: var(--primary);
+    }
+
+    .lead {
+      margin: 0 0 26px;
+      font-size: 1.08rem;
+      line-height: 1.75;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .glass-card, .card {
+      background: rgba(255,255,255,0.95);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+    }
+
+    .glass-card {
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass-card::after {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      right: -60px;
+      bottom: -60px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(216,164,55,0.26) 0%, rgba(216,164,55,0) 70%);
+      pointer-events: none;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(216,164,55,0.18);
+      color: #8b691f;
+      font-size: 0.8rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .stat {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 10px 26px rgba(13,47,95,0.05);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.68rem;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    section {
+      padding: 34px 0;
+    }
+
+    .section-head {
+      margin-bottom: 22px;
+    }
+
+    .section-head h2 {
+      margin: 0 0 10px;
+      color: var(--primary);
+      font-size: clamp(1.7rem, 3vw, 2.5rem);
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.72;
+      max-width: 860px;
+    }
+
+    .grid-2, .grid-3, .grid-4 {
+      display: grid;
+      gap: 18px;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+    .card {
+      padding: 22px;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 22px 44px rgba(13,47,95,0.10);
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      color: var(--primary);
+      font-size: 1.08rem;
+    }
+
+    .card p, .card li {
+      color: var(--muted);
+      line-height: 1.72;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .metric {
+      background: linear-gradient(180deg, #fff 0%, #f5f9ff 100%);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 24px 18px;
+      text-align: center;
+      box-shadow: 0 10px 28px rgba(13,47,95,0.05);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 2rem;
+      margin-bottom: 8px;
+      color: var(--primary);
+    }
+
+    .feature-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(21,82,154,0.12), rgba(47,183,201,0.16));
+      color: var(--primary);
+      font-size: 1.3rem;
+      margin-bottom: 14px;
+    }
+
+    .barrier-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .barrier {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 10px 28px rgba(13,47,95,0.05);
+    }
+
+    .barrier-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    .progress {
+      width: 100%;
+      height: 11px;
+      background: #e6eef8;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--primary), var(--accent), var(--accent-2));
+    }
+
+    .timeline {
+      position: relative;
+      display: grid;
+      gap: 14px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 15px;
+      width: 3px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--primary), rgba(47,183,201,0.14));
+    }
+
+    .timeline-item {
+      position: relative;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px 18px 18px 56px;
+      box-shadow: 0 10px 26px rgba(13,47,95,0.04);
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      left: 7px;
+      top: 22px;
+      background: var(--accent);
+      border: 4px solid #fff;
+      box-shadow: 0 0 0 2px rgba(13,47,95,0.10);
+    }
+
+    .embed-box {
+      width: 100%;
+      min-height: 460px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #f7fbff 0%, #eef4fc 100%);
+      box-shadow: 0 10px 30px rgba(13,47,95,0.05);
+    }
+
+    iframe {
+      width: 100%;
+      min-height: 560px;
+      border: 0;
+      background: #fff;
+    }
+
+    .placeholder {
+      display: grid;
+      place-items: center;
+      text-align: center;
+      min-height: 460px;
+      padding: 24px;
+      color: var(--muted);
+    }
+
+    .team-card h3 {
+      margin-bottom: 6px;
+    }
+
+    .team-role {
+      color: var(--primary-2);
+      font-size: 0.92rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .quote-box {
+      background: linear-gradient(135deg, var(--primary), #133f79);
+      color: #fff;
+      border-radius: 28px;
+      padding: 34px;
+      box-shadow: var(--shadow);
+    }
+
+    .quote-box h2, .quote-box p {
+      color: #fff;
+    }
+
+    .quote-box p {
+      opacity: 0.94;
+      line-height: 1.8;
+    }
+
+    footer {
+      padding: 26px 0 48px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .footer-box {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      border-top: 1px solid rgba(13,47,95,0.1);
+      padding-top: 18px;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1024px) {
+      .hero-grid,
+      .grid-3,
+      .grid-4,
+      .metric-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 14px 0;
+      }
+
+      .menu,
+      .hero-actions {
+        gap: 12px;
+      }
+
+      .hero {
+        padding-top: 54px;
+      }
+
+      .hero-grid,
+      .grid-2,
+      .grid-3,
+      .grid-4,
+      .metric-grid,
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      h1 { font-size: 2.3rem; }
+      .quote-box { padding: 26px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a class="brand" href="#inicio">
+        <div class="brand-badge">R</div>
+        <div>
+          REA UFMT
+          <small>Diagnóstico de Barreiras Empreendedoras</small>
+        </div>
+      </a>
+
+      <nav class="menu" id="menu">
+        <a href="#sobre">Sobre</a>
+        <a href="#coleta">Coleta</a>
+        <a href="#metodologia">Metodologia</a>
+        <a href="#descobertas">Descobertas</a>
+        <a href="#questionario">Questionário</a>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#equipe">Equipe</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="container hero-grid">
+        <div class="reveal">
+          <span class="eyebrow">Seminário Integrador VI • Bacharelado em Ciência e Tecnologia • UFMT</span>
+          <h1>Diagnóstico de Barreiras Empreendedoras na UFMT</h1>
+          <p class="lead">
+            Um guia baseado em dados para compreender os obstáculos à inovação, ao empreendedorismo
+            e à conexão entre academia e mercado. Transformamos dados em diagnóstico para ajudar a
+            UFMT a enxergar, compreender e enfrentar os desafios vividos por seus estudantes.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#questionario">Responder Questionário</a>
+            <a class="btn btn-secondary" href="#dashboard">Ver Dashboard</a>
+            <a class="btn btn-secondary" href="#guia">Acessar Guia Interativo</a>
+          </div>
+        </div>
+
+        <div class="glass-card reveal">
+          <span class="pill">Indicadores do projeto</span>
+          <h3 style="margin:0 0 12px;color:var(--primary);font-size:1.35rem;">Dados que ajudam a transformar a realidade acadêmica</h3>
+          <p style="margin:0;color:var(--muted);line-height:1.75;">
+            O projeto usa formulário online, ciência de dados, análise em Python e visualizações interativas
+            para mapear barreiras, apoiar decisões e aproximar os estudantes do ecossistema de inovação.
+          </p>
+          <div class="stats">
+            <div class="stat"><strong>92</strong><span>estudantes participantes</span></div>
+            <div class="stat"><strong>65,2%</strong><span>nunca ouviram falar do EIT</span></div>
+            <div class="stat"><strong>72,8%</strong><span>presencial</span></div>
+            <div class="stat"><strong>27,2%</strong><span>EaD</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sobre">
+      <div class="container reveal">
+        <div class="section-head">
+          <h2>Sobre o projeto</h2>
+          <p>
+            O REA – Diagnóstico de Barreiras Empreendedoras foi desenvolvido no curso de Bacharelado em
+            Ciência e Tecnologia da UFMT, dentro do Seminário Integrador VI, como um Recurso Educacional
+            Aberto. O projeto investiga por que muitos estudantes com potencial inovador ainda enfrentam
+            barreiras para empreender, acessar apoio institucional e transformar conhecimento em iniciativa.
+          </p>
+        </div>
+
+        <div class="grid-3">
+          <article class="card">
+            <div class="feature-icon">📘</div>
+            <h3>O que é o REA</h3>
+            <p>
+              Um recurso educacional aberto baseado em dados, construído para informar, orientar e apoiar a
+              comunidade acadêmica por meio de diagnóstico, socialização dos resultados e ambiente interativo.
+            </p>
+          </article>
+          <article class="card">
+            <div class="feature-icon">📊</div>
+            <h3>Baseado em dados reais</h3>
+            <p>
+              A proposta utiliza questionário, organização dos dados, limpeza com Python, análise exploratória
+              e produção de visualizações claras para apoiar leitura e tomada de decisão.
+            </p>
+          </article>
+          <article class="card">
+            <div class="feature-icon">🎯</div>
+            <h3>Impacto institucional</h3>
+            <p>
+              O diagnóstico busca gerar valor para estudantes, professores, gestores e parceiros, tornando mais
+              visíveis as lacunas entre universidade, inovação e mercado.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="problema">
+      <div class="container reveal">
+        <div class="section-head">
+          <h2>O problema central</h2>
+          <p>
+            Muitos estudantes têm interesse em inovar e empreender, mas esbarram em barreiras que travam esse
+            movimento. O projeto investiga essas dificuldades para transformá-las em conhecimento útil e ação.
+          </p>
+        </div>
+
+        <div class="grid-3">
+          <article class="card"><div class="feature-icon">💸</div><h3>Falta de investimento</h3><p>Dificuldade de reunir recursos iniciais para começar um projeto ou negócio.</p></article>
+          <article class="card"><div class="feature-icon">⏳</div><h3>Falta de tempo</h3><p>A graduação, o trabalho e a rotina acadêmica consomem grande parte da energia do estudante.</p></article>
+          <article class="card"><div class="feature-icon">📄</div><h3>Burocracia</h3><p>O medo da formalização e da complexidade do processo afasta iniciativas empreendedoras.</p></article>
+          <article class="card"><div class="feature-icon">🔎</div><h3>Desinformação</h3><p>Muitos alunos não sabem o que a UFMT oferece em termos de apoio à inovação e ao empreendedorismo.</p></article>
+          <article class="card"><div class="feature-icon">🧠</div><h3>Gestão de negócio</h3><p>Há domínio técnico em várias áreas, mas ainda falta orientação prática sobre gestão e desenvolvimento.</p></article>
+          <article class="card"><div class="feature-icon">📍</div><h3>Distância e acesso</h3><p>O desafio é ainda maior para estudantes EaD, afastados das oportunidades presenciais do ecossistema.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="coleta">
+      <div class="container reveal">
+        <div class="section-head">
+          <h2>Coleta e divulgação</h2>
+          <p>
+            A pesquisa foi construída com esforço de engajamento e alcance dentro da comunidade acadêmica.
+            A divulgação combinou canais digitais, comunicação visual e contato institucional para ampliar a participação.
+          </p>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <h3>Como a pesquisa foi divulgada</h3>
+            <ul>
+              <li>Formulário online para participação rápida e acessível.</li>
+              <li>Divulgação em grupos de WhatsApp da UFMT.</li>
+              <li>Postagens colaborativas no Instagram para aumentar engajamento.</li>
+              <li>Envio de e-mails a departamentos e coordenações.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Objetivo dessa etapa</h3>
+            <p>
+              Garantir uma coleta consistente, alcançar diferentes perfis de estudantes e respeitar os fluxos
+              institucionais ligados à extensão e à socialização do projeto dentro da universidade.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="metodologia">
+      <div class="container reveal">
+        <div class="section-head">
+          <h2>Metodologia</h2>
+          <p>
+            O projeto foi organizado para unir pesquisa de campo, ciência de dados e comunicação institucional.
+            Depois da coleta, os dados foram tratados e preparados para análise em ambiente computacional.
+          </p>
+        </div>
+
+        <div class="grid-4">
+          <article class="card">
+            <span class="pill">Etapa 1</span>
+            <h3>Coleta</h3>
+            <p>Aplicação do questionário online com participação de 92 estudantes da UFMT.</p>
+          </article>
+          <article class="card">
+            <span class="pill">Etapa 2</span>
+            <h3>Limpeza dos dados</h3>
+            <p>Uso de Python no Google Colab para remover erros, organizar respostas e padronizar informações.</p>
+          </article>
+          <article class="card">
+            <span class="pill">Etapa 3</span>
+            <h3>Análise exploratória</h3>
+            <p>Identificação das principais barreiras, médias, padrões e insights relevantes para o diagnóstico.</p>
+          </article>
+          <article class="card">
+            <span class="pill">Etapa 4</span>
+            <h3>Socialização</h3>
+            <p>Criação de dashboard, site e guia interativo para ampliar o acesso aos resultados.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="participantes">
+      <div class="container reveal">
+        <div class="section-head">
+          <h2>Quem participou</h2>
+          <p>
+            A pesquisa alcançou estudantes de diferentes áreas, com predominância do ensino presencial, mas também com presença importante do EaD.
+          </p>
+        </div>
+
+        <div class="metric-grid">
+          <div class="metric"><strong>92</strong><span>respondentes</span></div>
+          <div class="metric"><strong>72,8%</strong><span>ensino presencial</span></div>
+          <div class="metric"><strong>27,2%</strong><span>ensino EaD</span></div>
+          <div class="metric"><strong>diverso</strong><span>perfil de áreas de estudo</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="descobertas">
+      <div class="container reveal">
+        <div class="section-head">
+          <h2>A grande descoberta</h2>
+          <p>
+            Os dados mostraram um problema crítico de comunicação e acesso à informação sobre o ecossistema de inovação da universidade.
+          </p>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <h3>Termômetro da inovação e informação</h3>
+            <ul>
+              <li><strong>65,2%</strong> dos alunos nunca ouviram falar do EIT.</li>
+              <li><strong>14,1%</strong> conhecem e entendem as estruturas de apoio à inovação.</li>
+              <li><strong>18,5%</strong> já ouviram falar, mas não compreendem.</li>
+              <li><strong>1,09%</strong> conhecem o EIT via Profnit.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Médias de preparo e intenção</h3>
+            <ul>
+              <li><strong>6,27/10</strong> de preparo percebido.</li>
+              <li><strong>6,20/10</strong> de intenção de empreender.</li>
+              <li>Há forte demanda por orientação prática e por um guia digital passo a passo.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="barreiras">
+      <div class="container reveal">
+        <div class="section-head">
+          <h2>Ranking das barreiras empreendedoras</h2>
+          <p>
+            O diagnóstico identificou um conjunto claro de obstáculos à inovação. Abaixo está uma visualização já pronta para o site.
+          </p>
+        </div>
+
+        <div class="barrier-list" id="barrierList"></div>
+      </div>
+    </section>
+
+    <section id="ead">
+      <div class="container reveal">
+        <div class="section-head">
+          <h2>O isolamento do aluno EaD</h2>
+          <p>
+            Ao cruzar os dados com as modalidades, foi identificado o “isolamento do ecossistema” enfrentado pelo aluno de Ensino a Distância.
+          </p>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <h3>Um limitador qualitativo crítico</h3>
+            <p>
+              Polos como Rondonópolis e Guarantã do Norte evidenciam a barreira de distância e acesso. Embora a frequência absoluta seja menor,
+              o efeito é profundo: parte do estudante EaD fica geograficamente afastada de laboratórios, eventos e networking presencial.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Leitura institucional</h3>
+            <p>
+              A inovação na UFMT ainda depende muito de infraestrutura física centralizada. Esse cenário reforça a necessidade de ampliar apoio,
+              acesso remoto e integração para os discentes que estão fora do campus central.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="questionario">
+      <div class="container reveal">
+        <div class="section-head">
+          <h2>Questionário</h2>
+          <p>
+            Sua resposta ajuda a transformar a universidade. Esta área já está pronta para abrir o formulário em nova aba e também incorporar o conteúdo por iframe.
+          </p>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <h3>Participe da pesquisa</h3>
+            <p>
+              O formulário amplia a base de dados do projeto e fortalece o diagnóstico sobre inovação, empreendedorismo e permanência acadêmica na UFMT.
+            </p>
+            <a class="btn btn-primary" id="formButton" href="#" target="_blank" rel="noopener noreferrer">Abrir formulário</a>
+          </article>
+          <article class="card">
+            <h3>Formulário incorporado</h3>
+            <div class="embed-box">
+              <iframe id="formFrame" src="about:blank" title="Formulário do projeto"></iframe>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="dashboard">
+      <div class="container reveal">
+        <div class="section-head">
+          <h2>Dashboard</h2>
+          <p>
+            Esta seção está preparada para Power BI, Looker Studio ou outro painel web com métricas, filtros, gráficos e indicadores públicos do projeto.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="embed-box">
+            <iframe id="dashboardFrame" src="about:blank" title="Dashboard do projeto"></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="guia">
+      <div class="container reveal">
+        <div class="section-head">
+          <h2>Guia Interativo</h2>
+          <p>
+            O projeto disponibiliza um ambiente interativo para explorar os dados de forma dinâmica, quase como uma conversa com a própria pesquisa.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Guia Interativo: Diagnóstico de Barreiras à Inovação na UFMT</h3>
+          <p>
+            Este espaço dá acesso ao ambiente do NotebookLM, permitindo leitura ampliada, navegação por tópicos e exploração dos materiais do projeto.
+          </p>
+          <a class="btn btn-primary" id="guideButton" href="#" target="_blank" rel="noopener noreferrer">Abrir guia interativo</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="trajetoria">
+      <div class="container reveal">
+        <div class="section-head">
+          <h2>Nossa trajetória</h2>
+          <p>
+            O REA foi construído em etapas, da formulação da ideia até a socialização dos achados em ambiente digital.
+          </p>
+        </div>
+
+        <div class="timeline">
+          <div class="timeline-item"><h3>1. Surgimento da ideia</h3><p>Identificação da necessidade de diagnosticar barreiras empreendedoras na UFMT.</p></div>
+          <div class="timeline-item"><h3>2. Elaboração da pesquisa</h3><p>Definição do questionário, objetivos e estratégias de divulgação.</p></div>
+          <div class="timeline-item"><h3>3. Coleta das respostas</h3><p>Mobilização da comunidade acadêmica por canais digitais e institucionais.</p></div>
+          <div class="timeline-item"><h3>4. Limpeza e análise</h3><p>Tratamento dos dados com Python e interpretação dos resultados.</p></div>
+          <div class="timeline-item"><h3>5. Socialização</h3><p>Produção do dashboard, do guia interativo e do site do projeto.</p></div>
+          <div class="timeline-item"><h3>6. Continuidade</h3><p>Proposta de atualização periódica do REA como termômetro da inovação na instituição.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="equipe">
+      <div class="container reveal">
+        <div class="section-head">
+          <h2>Equipe</h2>
+          <p>
+            Abaixo está a equipe real do projeto, com estrutura pronta para adicionar fotos e funções específicas depois.
+          </p>
+        </div>
+
+        <div class="grid-3" id="teamGrid"></div>
+      </div>
+    </section>
+
+    <section id="aprendizados">
+      <div class="container reveal">
+        <div class="section-head">
+          <h2>Aprendizados</h2>
+          <p>
+            O projeto foi entendido como um ensaio preliminar e uma experiência importante de pesquisa de campo, trazendo resultados valiosos e apontando caminhos de melhoria.
+          </p>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <h3>Leitura crítica do estudo</h3>
+            <ul>
+              <li>92 respostas ainda são poucas diante do tamanho da UFMT.</li>
+              <li>Perguntas fechadas podem ter limitado parte das opiniões dos alunos.</li>
+              <li>Mesmo assim, os dados trouxeram insights fortes e relevantes.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Valor do projeto</h3>
+            <p>
+              O REA já funciona como um diagnóstico inicial robusto, com capacidade de orientar novas ações, aperfeiçoar a coleta futura e fortalecer a cultura de inovação com base em evidências.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="futuro">
+      <div class="container reveal">
+        <div class="section-head">
+          <h2>Futuro do projeto</h2>
+          <p>
+            A proposta é ampliar o escopo, aprofundar a escuta e consolidar o REA como instrumento contínuo de acompanhamento da inovação na UFMT.
+          </p>
+        </div>
+
+        <div class="grid-3">
+          <article class="card"><h3>Perguntas abertas</h3><p>Adicionar mais espaço para respostas livres e reduzir vieses de confirmação.</p></article>
+          <article class="card"><h3>Mais tempo de pesquisa</h3><p>Ampliar a coleta para alcançar uma amostra mais representativa da universidade.</p></article>
+          <article class="card"><h3>Apoio ao EaD</h3><p>Fortalecer ações que reduzam o isolamento geográfico dos estudantes a distância.</p></article>
+          <article class="card"><h3>Trilhas de aprendizagem</h3><p>Desenvolver conteúdos digitais sobre gestão, inovação e desburocratização.</p></article>
+          <article class="card"><h3>Atualização anual</h3><p>Transformar o REA em um termômetro contínuo das ações de inovação da instituição.</p></article>
+          <article class="card"><h3>Integração institucional</h3><p>Aproximar ainda mais estudantes, estruturas de apoio e oportunidades de mercado.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="ponte">
+      <div class="container reveal">
+        <div class="quote-box">
+          <h2>Ciência de Dados como ponte</h2>
+          <p>
+            A Ciência de Dados é a ferramenta capaz de reduzir a lacuna entre a excelência acadêmica e o impacto real na sociedade, transformando este diagnóstico em um motor de mudança para o ecossistema inovador da UFMT.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#questionario">Participar</a>
+            <a class="btn btn-secondary" href="#dashboard" style="background:#fff;color:var(--primary);">Ver dados</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-box">
+      <div>
+        <strong>UFMT • Bacharelado em Ciência e Tecnologia</strong><br />
+        Seminário Integrador VI • REA – Diagnóstico de Barreiras Empreendedoras
+      </div>
+      <div>
+        Estrutura pronta para GitHub Pages. Edite os links do formulário e do dashboard antes de publicar.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // =========================
+    // CONFIGURE SEUS LINKS AQUI
+    // =========================
+    const CONFIG = {
+      formulario: 'https://forms.google.com',
+      dashboard: 'https://lookerstudio.google.com/',
+      guia: 'https://notebooklm.google.com/notebook/e0e0263e-0928-48b9-ba12-c148d3c10782'
+    };
+
+    // =========================
+    // DADOS DO SITE
+    // =========================
+    const barriers = [
+      { label: 'Dinheiro: falta de investimento inicial', value: 32 },
+      { label: 'Tempo: graduação e trabalho consomem tudo', value: 18 },
+      { label: 'Burocracia: medo da complexidade para formalizar', value: 13 },
+      { label: 'Desinformação: não saber o que a UFMT oferece', value: 13 },
+      { label: 'Conhecimento: falta de gestão de negócio', value: 9 },
+      { label: 'Distância/Acesso: dificuldade especialmente para o EaD', value: 3 }
+    ];
+
+    const team = [
+      'Adriano Rodrigues da Silva',
+      'Caroline dos Anjos Vaez',
+      'Josiane Mendes Ferreira',
+      'Luis Eduardo Pereira Marques',
+      'Paula da Silva Pereira',
+      'Raissa Kanamaro Ferraz',
+      'Osmar de Jesus Fernandes Martini'
+    ];
+
+    // =========================
+    // LINKS DINÂMICOS
+    // =========================
+    const formButton = document.getElementById('formButton');
+    const formFrame = document.getElementById('formFrame');
+    const dashboardFrame = document.getElementById('dashboardFrame');
+    const guideButton = document.getElementById('guideButton');
+
+    if (formButton) formButton.href = CONFIG.formulario;
+    if (formFrame) formFrame.src = CONFIG.formulario;
+    if (dashboardFrame) dashboardFrame.src = CONFIG.dashboard;
+    if (guideButton) guideButton.href = CONFIG.guia;
+
+    // =========================
+    // RENDER DAS BARREIRAS
+    // =========================
+    const barrierList = document.getElementById('barrierList');
+    const maxBarrier = Math.max(...barriers.map(item => item.value));
+
+    if (barrierList) {
+      barriers.forEach(item => {
+        const percent = (item.value / maxBarrier) * 100;
+        const div = document.createElement('div');
+        div.className = 'barrier';
+        div.innerHTML = `
+          <div class="barrier-top">
+            <span>${item.label}</span>
+            <span>${item.value}</span>
+          </div>
+          <div class="progress">
+            <span style="width:${percent}%"></span>
+          </div>
+        `;
+        barrierList.appendChild(div);
+      });
+    }
+
+    // =========================
+    // RENDER DA EQUIPE
+    // =========================
+    const teamGrid = document.getElementById('teamGrid');
+
+    if (teamGrid) {
+      team.forEach((name, index) => {
+        const card = document.createElement('article');
+        card.className = 'card team-card';
+        card.innerHTML = `
+          <h3>${name}</h3>
+          <div class="team-role">Integrante do projeto</div>
+          <p>
+            Espaço pronto para adicionar foto, função específica e breve descrição do integrante ${index + 1}.
+          </p>
+        `;
+        teamGrid.appendChild(card);
+      });
+    }
+
+    // =========================
+    // ANIMAÇÃO DE ENTRADA
+    // =========================
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.15 });
+
+    reveals.forEach(item => observer.observe(item));
+
+    // =========================
+    // LINK ATIVO NO MENU
+    // =========================
+    const sections = document.querySelectorAll('main section[id]');
+    const menuLinks = document.querySelectorAll('#menu a');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const top = section.offsetTop - 120;
+        const height = section.offsetHeight;
+        if (window.scrollY >= top && window.scrollY < top + height) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      menuLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
 
