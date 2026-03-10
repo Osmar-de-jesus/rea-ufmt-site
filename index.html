@@ -153,6 +153,7 @@
     }
 
     .btn:hover { transform: translateY(-3px); }
+
     .btn-primary {
       background: linear-gradient(135deg, var(--primary), var(--primary-2));
       color: #fff;
@@ -306,7 +307,6 @@
     }
 
     section { padding: 38px 0; }
-
     .section-head { margin-bottom: 24px; }
 
     .section-head h2 {
@@ -353,7 +353,7 @@
       font-size: 1.08rem;
     }
 
-    .card p, .card li, .chart-card p, .quick-card p {
+    .card p, .card li, .chart-card p, .quick-card p, .note-box p {
       color: var(--muted);
       line-height: 1.74;
     }
@@ -511,8 +511,6 @@
       padding: 18px 20px;
       border-radius: 18px;
       margin-top: 16px;
-      color: var(--muted);
-      line-height: 1.7;
     }
 
     .team-grid {
@@ -641,8 +639,17 @@
       background: radial-gradient(circle, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0) 70%);
     }
 
-    .quote-box h2, .quote-box p { color: #fff; position: relative; z-index: 1; }
-    .quote-box p { opacity: 0.95; line-height: 1.82; max-width: 860px; }
+    .quote-box h2, .quote-box p {
+      color: #fff;
+      position: relative;
+      z-index: 1;
+    }
+
+    .quote-box p {
+      opacity: 0.95;
+      line-height: 1.82;
+      max-width: 860px;
+    }
 
     footer {
       padding: 28px 0 50px;
@@ -950,10 +957,10 @@
 
         <div class="card">
           <div class="embed-box">
-            <iframe id="formFrame" src="https://docs.google.com/forms/d/e/1FAIpQLSebwGCVSWrCfOosVJ58doCx5Gf0qtTyPv1QSMD6mxScfwYPcw/viewform?embedded=true" title="Formulário da pesquisa"></iframe>
+            <iframe id="formFrame" src="" title="Formulário da pesquisa"></iframe>
           </div>
           <div class="note-box">
-            <strong>Importante:</strong> para o dashboard atualizar sozinho, você ainda precisa vincular esse Google Forms a uma planilha do Google Sheets e publicar a aba de respostas na web. Sem isso, o formulário funciona, mas o dashboard não consegue ler as respostas em tempo real.
+            <strong>Importante:</strong> o formulário já está funcionando. O dashboard ao vivo depende da leitura da planilha publicada em CSV.
           </div>
         </div>
       </div>
@@ -964,7 +971,7 @@
         <div class="section-head">
           <h2>Dashboard interativo</h2>
           <p>
-            Este painel foi preparado para ler as respostas do formulário e transformar os dados em métricas e gráficos interativos dentro do próprio site.
+            Este painel lê as respostas publicadas da planilha e transforma os dados em métricas e gráficos interativos dentro do próprio site.
           </p>
         </div>
 
@@ -996,7 +1003,7 @@
 
         <p class="status-line" id="dashboardStatus">Aguardando leitura da base de dados.</p>
         <div class="note-box">
-          <strong>Para o dashboard funcionar de verdade:</strong> vincule o Google Forms a uma planilha do Google Sheets, publique a aba de respostas na web em formato CSV e cole esse link na variável <code>SHEET_CSV_URL</code> do código. Sem essa etapa, o site não consegue ler os dados automaticamente.
+          <strong>Banco de dados conectado:</strong> este site está configurado para ler o CSV publicado da planilha de respostas.
         </div>
       </div>
     </section>
@@ -1013,7 +1020,7 @@
         <div class="card">
           <h3>Guia Interativo: Diagnóstico de Barreiras à Inovação na UFMT</h3>
           <p>Este espaço dá acesso ao ambiente do NotebookLM, permitindo leitura ampliada, navegação por tópicos e exploração dos materiais do projeto.</p>
-          <a class="btn btn-primary" id="guideButton" href="https://notebooklm.google.com/notebook/e0e0263e-0928-48b9-ba12-c148d3c10782" target="_blank" rel="noopener noreferrer">Abrir guia interativo</a>
+          <a class="btn btn-primary" id="guideButton" href="" target="_blank" rel="noopener noreferrer">Abrir guia interativo</a>
         </div>
       </div>
     </section>
@@ -1120,7 +1127,7 @@
         Seminário Integrador VI • REA – Diagnóstico de Barreiras Empreendedoras
       </div>
       <div>
-        Site pronto para GitHub Pages. Para ativar o dashboard ao vivo, conecte o Forms ao Sheets e publique a aba de respostas na web.
+        Site pronto para GitHub Pages com formulário e dashboard conectados.
       </div>
     </div>
   </footer>
@@ -1130,50 +1137,25 @@
     // CONFIGURAÇÕES PRINCIPAIS
     // =========================
     const FORM_PUBLIC_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSebwGCVSWrCfOosVJ58doCx5Gf0qtTyPv1QSMD6mxScfwYPcw/viewform?embedded=true';
-
-    // COLE AQUI O LINK CSV DA ABA DE RESPOSTAS DO GOOGLE SHEETS.
-    // Exemplo:
-    // https://docs.google.com/spreadsheets/d/e/2PACX-XXXXX/pub?gid=0&single=true&output=csv
     const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQcSMHNIuR68vOrkSZ0oYKDhBE7IHfqBO1u2XiI3VSqu9HDp4TMgZFfgJA1ZC-smSCAwe6ecMwoF8ke/pub?gid=60774319&single=true&output=csv';
     const GUIDE_URL = 'https://notebooklm.google.com/notebook/e0e0263e-0928-48b9-ba12-c148d3c10782';
 
     const FALLBACK_DATA = [
-      {
-        modalidade: 'Presencial',
-        eit: 'Nunca ouvi falar',
-        preparo: 6,
-        empreender: 7,
-        barreira: 'Falta de investimento inicial'
-      },
-      {
-        modalidade: 'EaD',
-        eit: 'Já ouvi falar, mas não compreendo',
-        preparo: 5,
-        empreender: 6,
-        barreira: 'Distância/Acesso'
-      },
-      {
-        modalidade: 'Presencial',
-        eit: 'Conheço e entendo',
-        preparo: 8,
-        empreender: 8,
-        barreira: 'Falta de tempo'
-      },
-      {
-        modalidade: 'Presencial',
-        eit: 'Nunca ouvi falar',
-        preparo: 6,
-        empreender: 6,
-        barreira: 'Desinformação'
-      },
-      {
-        modalidade: 'EaD',
-        eit: 'Nunca ouvi falar',
-        preparo: 4,
-        empreender: 5,
-        barreira: 'Distância/Acesso'
-      }
+      { modalidade: 'Presencial', eit: 'Nunca ouvi falar', preparo: 6, empreender: 7, barreira: 'Falta de investimento inicial' },
+      { modalidade: 'EaD', eit: 'Já ouvi falar, mas não compreendo', preparo: 5, empreender: 6, barreira: 'Distância/Acesso' },
+      { modalidade: 'Presencial', eit: 'Conheço e entendo', preparo: 8, empreender: 8, barreira: 'Falta de tempo' },
+      { modalidade: 'Presencial', eit: 'Nunca ouvi falar', preparo: 6, empreender: 6, barreira: 'Desinformação' },
+      { modalidade: 'EaD', eit: 'Nunca ouvi falar', preparo: 4, empreender: 5, barreira: 'Distância/Acesso' }
     ];
+
+    // =========================
+    // LINKS DINÂMICOS
+    // =========================
+    const formFrame = document.getElementById('formFrame');
+    const guideButton = document.getElementById('guideButton');
+
+    if (formFrame) formFrame.src = FORM_PUBLIC_URL;
+    if (guideButton) guideButton.href = GUIDE_URL;
 
     // =========================
     // EQUIPE
@@ -1256,9 +1238,7 @@
     let scoreChartInstance;
 
     function parseCSV(csvText) {
-      const rows = csvText.trim().split(/
-?
-/).map(row => {
+      const rows = csvText.trim().split(/\r?\n/).map(row => {
         const result = [];
         let current = '';
         let insideQuotes = false;
@@ -1287,6 +1267,7 @@
       });
 
       const headers = rows[0].map(h => h.trim());
+
       return rows.slice(1).map(row => {
         const obj = {};
         headers.forEach((header, index) => {
@@ -1355,8 +1336,8 @@
       const total = data.length;
       const modalities = countBy(data, 'modalidade');
       const eit = countBy(data, 'eit');
-      const avgPreparo = average(data.map(item => item.preparo).filter(Boolean));
-      const avgEmpreender = average(data.map(item => item.empreender).filter(Boolean));
+      const avgPreparo = average(data.map(item => item.preparo).filter(value => value || value === 0));
+      const avgEmpreender = average(data.map(item => item.empreender).filter(value => value || value === 0));
 
       const unknownEit = eit['Nunca ouvi falar'] || eit['Não conheço'] || 0;
       const heardOnly = eit['Já ouvi falar, mas não compreendo'] || eit['Já ouvi falar'] || 0;
@@ -1372,18 +1353,18 @@
       document.getElementById('metricTotal').textContent = total || '--';
       document.getElementById('metricPresencial').textContent = percentage(presencial, total);
       document.getElementById('metricEad').textContent = percentage(ead, total);
-      document.getElementById('metricPreparo').textContent = avgPreparo ? avgPreparo.toFixed(2).replace('.', ',') : '--';
+      document.getElementById('metricPreparo').textContent = total ? avgPreparo.toFixed(2).replace('.', ',') : '--';
 
       document.getElementById('eitUnknownText').textContent = percentage(unknownEit, total);
       document.getElementById('eitKnownText').textContent = percentage(knowWell, total);
       document.getElementById('eitHeardText').textContent = percentage(heardOnly, total);
-      document.getElementById('preparoText').textContent = avgPreparo ? avgPreparo.toFixed(2).replace('.', ',') + '/10' : '--';
-      document.getElementById('empreenderText').textContent = avgEmpreender ? avgEmpreender.toFixed(2).replace('.', ',') + '/10' : '--';
+      document.getElementById('preparoText').textContent = total ? avgPreparo.toFixed(2).replace('.', ',') + '/10' : '--';
+      document.getElementById('empreenderText').textContent = total ? avgEmpreender.toFixed(2).replace('.', ',') + '/10' : '--';
 
       document.getElementById('dashTotal').textContent = total || '--';
       document.getElementById('dashEitUnknown').textContent = percentage(unknownEit, total);
       document.getElementById('dashPresencial').textContent = percentage(presencial, total);
-      document.getElementById('dashEmpreender').textContent = avgEmpreender ? avgEmpreender.toFixed(2).replace('.', ',') : '--';
+      document.getElementById('dashEmpreender').textContent = total ? avgEmpreender.toFixed(2).replace('.', ',') : '--';
     }
 
     function destroyChart(instance) {
@@ -1394,8 +1375,8 @@
       const modalities = countBy(data, 'modalidade');
       const eit = countBy(data, 'eit');
       const barriers = countBy(data, 'barreira');
-      const avgPreparo = average(data.map(item => item.preparo).filter(Boolean));
-      const avgEmpreender = average(data.map(item => item.empreender).filter(Boolean));
+      const avgPreparo = average(data.map(item => item.preparo).filter(value => value || value === 0));
+      const avgEmpreender = average(data.map(item => item.empreender).filter(value => value || value === 0));
 
       renderBarrierList(barriers);
 
@@ -1408,7 +1389,10 @@
         type: 'doughnut',
         data: {
           labels: Object.keys(modalities),
-          datasets: [{ data: Object.values(modalities) }]
+          datasets: [{
+            data: Object.values(modalities),
+            backgroundColor: ['#174f96', '#37bfd0', '#d8a437', '#9aa7b5']
+          }]
         },
         options: {
           responsive: true,
@@ -1420,7 +1404,10 @@
         type: 'bar',
         data: {
           labels: Object.keys(eit),
-          datasets: [{ data: Object.values(eit) }]
+          datasets: [{
+            data: Object.values(eit),
+            backgroundColor: ['#174f96', '#37bfd0', '#d8a437', '#9aa7b5']
+          }]
         },
         options: {
           responsive: true,
@@ -1433,7 +1420,10 @@
         type: 'bar',
         data: {
           labels: Object.keys(barriers),
-          datasets: [{ data: Object.values(barriers) }]
+          datasets: [{
+            data: Object.values(barriers),
+            backgroundColor: '#174f96'
+          }]
         },
         options: {
           indexAxis: 'y',
@@ -1447,7 +1437,10 @@
         type: 'bar',
         data: {
           labels: ['Preparo percebido', 'Intenção de empreender'],
-          datasets: [{ data: [avgPreparo || 0, avgEmpreender || 0] }]
+          datasets: [{
+            data: [avgPreparo || 0, avgEmpreender || 0],
+            backgroundColor: ['#174f96', '#d8a437']
+          }]
         },
         options: {
           responsive: true,
@@ -1461,7 +1454,7 @@
       const status = document.getElementById('dashboardStatus');
 
       if (!SHEET_CSV_URL) {
-        status.textContent = 'Dashboard em modo de demonstração. Cole o link CSV publicado do Google Sheets para ativar a atualização automática.';
+        status.textContent = 'Dashboard em modo de demonstração.';
         updateSummaryCards(FALLBACK_DATA);
         renderCharts(FALLBACK_DATA);
         return;
@@ -1483,13 +1476,14 @@
         status.textContent = `Dashboard atualizado com ${normalized.length} respostas.`;
       } catch (error) {
         console.error(error);
-        status.textContent = 'Não foi possível ler a planilha publicada. O painel ficou em modo de demonstração até você corrigir o link CSV.';
+        status.textContent = 'Não foi possível ler a planilha publicada. O painel ficou em modo de demonstração.';
         updateSummaryCards(FALLBACK_DATA);
         renderCharts(FALLBACK_DATA);
       }
     }
 
     loadDashboardData();
+    setInterval(loadDashboardData, 30000);
   </script>
 </body>
 </html>
