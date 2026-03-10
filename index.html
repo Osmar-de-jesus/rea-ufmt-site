@@ -249,7 +249,8 @@
     .team-card,
     .chart-card,
     .note-box,
-    .quick-card {
+    .quick-card,
+    .live-banner {
       background: var(--surface);
       border: 1px solid var(--border);
       box-shadow: var(--shadow-soft);
@@ -353,7 +354,7 @@
       font-size: 1.08rem;
     }
 
-    .card p, .card li, .chart-card p, .quick-card p, .note-box p {
+    .card p, .card li, .chart-card p, .quick-card p, .note-box p, .live-banner p {
       color: var(--muted);
       line-height: 1.74;
     }
@@ -618,6 +619,17 @@
       font-size: 0.95rem;
     }
 
+    .live-banner {
+      border-left: 6px solid var(--primary-2);
+      padding: 18px;
+      border-radius: 14px;
+      margin-bottom: 20px;
+    }
+
+    .live-banner strong {
+      color: var(--primary);
+    }
+
     .quote-box {
       background: linear-gradient(135deg, var(--primary), #133f79);
       color: #fff;
@@ -755,9 +767,9 @@
 
         <div class="glass-card reveal">
           <span class="pill">Indicadores do projeto</span>
-          <h3 style="margin:0 0 12px;color:var(--primary);font-size:1.35rem;">Dados da análise original do projeto</h3>
+          <h3 style="margin:0 0 12px;color:var(--primary);font-size:1.35rem;">Síntese da análise original do projeto</h3>
           <p style="margin:0;color:var(--muted);line-height:1.8;">
-            Estes indicadores registram os principais resultados da análise original construída pelo grupo a partir de 92 respostas. O dashboard abaixo acompanha as respostas atuais do formulário.
+            Estes indicadores registram os principais resultados da análise original construída pelo grupo com 92 respostas. O dashboard abaixo mostra apenas as respostas atuais enviadas pelos alunos no formulário.
           </p>
           <div class="stats">
             <div class="stat"><strong>92</strong><span>respostas na análise original</span></div>
@@ -868,7 +880,7 @@
         <div class="section-head">
           <h2>Quem participou</h2>
           <p>
-            Estes dados abaixo registram o retrato da análise original do projeto, construída a partir de 92 respondentes da UFMT.
+            Estes dados registram o retrato da análise original do projeto, construída a partir de 92 respondentes da UFMT.
           </p>
         </div>
 
@@ -916,7 +928,7 @@
         <div class="section-head">
           <h2>Ranking das barreiras empreendedoras</h2>
           <p>
-            Abaixo está o ranking dinâmico atualizado pelas respostas atuais do formulário publicado.
+            Abaixo está o ranking consolidado da análise original do projeto, construído com base nas 92 respostas estudadas pela equipe.
           </p>
         </div>
 
@@ -960,7 +972,7 @@
             <iframe id="formFrame" src="" title="Formulário da pesquisa"></iframe>
           </div>
           <div class="note-box">
-            <strong>Importante:</strong> o formulário já está funcionando. O dashboard abaixo acompanha as respostas atuais publicadas na planilha.
+            <strong>Importante:</strong> o formulário já está funcionando. O dashboard abaixo acompanha apenas as respostas atuais publicadas na planilha.
           </div>
         </div>
       </div>
@@ -969,9 +981,16 @@
     <section id="dashboard">
       <div class="container reveal">
         <div class="section-head">
-          <h2>Dashboard interativo</h2>
+          <h2>Dashboard – respostas atuais do formulário</h2>
           <p>
-            Este painel acompanha as respostas atuais do formulário publicado. Já os resultados fixos apresentados ao longo do site registram a análise original do projeto, construída a partir de 92 respostas.
+            Este painel mostra os resultados atuais enviados pelos alunos através do formulário. Os dados apresentados aqui são atualizados automaticamente conforme novas respostas são registradas.
+          </p>
+        </div>
+
+        <div class="live-banner">
+          📊 <strong>Resultados em tempo real:</strong>
+          <p style="margin:6px 0 0 0;">
+            Este dashboard mostra apenas as respostas atuais enviadas pelos estudantes através do formulário da pesquisa.
           </p>
         </div>
 
@@ -992,11 +1011,11 @@
             <div class="chart-wrap"><canvas id="eitChart"></canvas></div>
           </article>
           <article class="chart-card">
-            <h3>Principais barreiras</h3>
+            <h3>Principais barreiras atuais</h3>
             <div class="chart-wrap"><canvas id="barrierChart"></canvas></div>
           </article>
           <article class="chart-card">
-            <h3>Médias da pesquisa</h3>
+            <h3>Médias atuais da pesquisa</h3>
             <div class="chart-wrap"><canvas id="scoreChart"></canvas></div>
           </article>
         </div>
@@ -1127,7 +1146,7 @@
         Seminário Integrador VI • REA – Diagnóstico de Barreiras Empreendedoras
       </div>
       <div>
-        Site pronto para GitHub Pages com indicadores fixos da análise original e dashboard atualizado pelo formulário.
+        Site pronto para GitHub Pages com síntese fixa da análise original e dashboard atualizado pelo formulário.
       </div>
     </div>
   </footer>
@@ -1143,6 +1162,15 @@
       { modalidade: 'Presencial', eit: 'Conheço e entendo', preparo: 8, empreender: 8, barreira: 'Falta de tempo' },
       { modalidade: 'Presencial', eit: 'Nunca ouvi falar', preparo: 6, empreender: 6, barreira: 'Desinformação' },
       { modalidade: 'EaD', eit: 'Nunca ouvi falar', preparo: 4, empreender: 5, barreira: 'Distância/Acesso' }
+    ];
+
+    const ORIGINAL_BARRIERS = [
+      ['Dinheiro: falta de investimento inicial', 32],
+      ['Tempo: graduação e trabalho consomem tudo', 18],
+      ['Burocracia: medo da complexidade para formalizar', 13],
+      ['Desinformação: não saber o que a UFMT oferece', 13],
+      ['Conhecimento: falta de gestão de negócio', 9],
+      ['Distância/Acesso: dificuldade especialmente para o EaD', 3]
     ];
 
     const formFrame = document.getElementById('formFrame');
@@ -1298,15 +1326,14 @@
       }, {});
     }
 
-    function renderBarrierList(barriersCount) {
+    function renderOriginalBarrierList() {
       const barrierList = document.getElementById('barrierList');
       if (!barrierList) return;
+
       barrierList.innerHTML = '';
+      const maxValue = ORIGINAL_BARRIERS[0][1];
 
-      const entries = Object.entries(barriersCount).sort((a, b) => b[1] - a[1]);
-      const maxValue = entries.length ? entries[0][1] : 1;
-
-      entries.forEach(([label, value]) => {
+      ORIGINAL_BARRIERS.forEach(([label, value]) => {
         const percent = (value / maxValue) * 100;
         const div = document.createElement('div');
         div.className = 'barrier';
@@ -1346,8 +1373,6 @@
       const barriers = countBy(data, 'barreira');
       const avgPreparo = average(data.map(item => item.preparo).filter(value => value || value === 0));
       const avgEmpreender = average(data.map(item => item.empreender).filter(value => value || value === 0));
-
-      renderBarrierList(barriers);
 
       destroyChart(modalityChartInstance);
       destroyChart(eitChartInstance);
@@ -1451,6 +1476,7 @@
       }
     }
 
+    renderOriginalBarrierList();
     loadDashboardData();
     setInterval(loadDashboardData, 30000);
   </script>
